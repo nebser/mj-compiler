@@ -27,9 +27,17 @@ public class LexerTest {
 		try (Reader br = new BufferedReader(new FileReader(sourceCode))) {
 			Yylex lexer = new Yylex(br);
 			Symbol currToken = null;
-			while ((currToken = lexer.next_token()).sym != sym.EOF) {
-				if (currToken != null && currToken.value != null)
-					log.info(currToken.toString() + " " + currToken.value.toString());
+			while (true) {
+				try {
+					currToken = lexer.next_token();
+					if (currToken.sym == sym.EOF) {
+						break;
+					}
+					if (currToken != null && currToken.value != null)
+						log.info(currToken.toString() + " " + currToken.value.toString());
+				} catch (LexerException e) {
+					log.error(e.toString());
+				}
 			}
 		}
 	}

@@ -87,6 +87,6 @@ import java_cup.runtime.Symbol;
 \"\"\".\"\"\" { return new_symbol(sym.CHARACTER, yytext()); }
 true|false { return new_symbol(sym.BOOL, yytext()); }
 
-. { System.err.println("Leksicka greska ("+yytext()+") u liniji "+(yyline+1)); }
+. { throw new LexerException(yytext(), yyline+1, yycolumn); }
 
  
