@@ -1,0 +1,160 @@
+package rs.ac.bg.etf.pp1;
+
+import java_cup.runtime.*;
+import org.apache.log4j.*;
+import rs.ac.bg.etf.pp1.ast.*;
+
+parser code {:
+
+	Logger log = Logger.getLogger(getClass());
+   
+   
+    // slede redefinisani metodi za prijavu gresaka radi izmene teksta poruke
+     
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error("\nSintaksna greska", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error("Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" na liniji ").append(((Symbol)info).left);
+        log.error(msg.toString());
+    }
+
+
+:}
+
+terminal PROGRAM, CONST, COMMA, CLASS, EXTENDS, ABSTRACT, ASSIGN;
+terminal String IDENT, CHARACTER, BOOL;
+terminal Integer NUMBER;
+terminal SEMI_COLON, LBRACKET, RBRACKET, LBRACE, RBRACE;
+terminal LPARENTHESIS, RPARENTHESIS, VOID;
+
+nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
+nonterminal VarDecl, AbstractClassDecl, ClassDecl;
+nonterminal ConstList, Const, ConstDefinition;
+nonterminal VarDeclSection, VarDeclList, VarList, Var, SingleVar, ArrayVar;
+nonterminal Program, Type;
+nonterminal Statements, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
+nonterminal ReturnType, FormPars, AbstractMethodDecl, MethodDeclList, ExtendsStmt;
+
+Program ::= (Program) PROGRAM IDENT DeclSection LBRACE MethodDeclSection RBRACE;
+
+DeclSection ::= (DeclarationSection) DeclList
+				|
+				(NoDeclarationSection) /* epsilon */
+				;
+
+DeclList ::= (Declarations) DeclList DeclElem
+			|
+			(Declaration) DeclElem
+			;
+			
+DeclElem ::= (ConstantDeclarations) CONST Type IDENT ConstList
+			|
+			(GlobalVariableDeclarations) VarDecl
+			|
+			(GlobalAbstactClassDeclarations) AbstractClassDecl
+			|
+			(GlobalClassDeclarations) ClassDecl
+			;
+
+ConstList ::= (Constants) ConstList COMMA ConstDefinition
+			|
+			 (Constant) ConstDefinition
+			;
+			
+ConstDefinition ::= (ConstDefinition) IDENT ASSIGN Const SEMI_COLON;
+
+Const ::= (NumberConstant) NUMBER
+					|
+					(CharacterConstant) CHARACTER
+					|
+					(BoolConstant) BOOL
+					;
+
+VarDecl ::= (VarDecl) Type VarList SEMI_COLON;
+
+VarList ::= (Variables) VarList COMMA Var
+			|
+			(Variable) Var
+			;
+			
+Var ::= (PrimitiveVariable) SingleVar
+		|
+		(ArrayVariable) ArrayVar
+		;
+		
+SingleVar ::= (SingleVar) IDENT;
+		
+ArrayVar ::= (ArrayVar) IDENT LBRACKET RBRACKET;
+
+MethodDeclSection ::= (MethodDeclarationSection) LBRACE MethodDeclList RBRACE
+					|
+					(NoMethodDeclarationSection) /* epsilon */
+					;
+					
+MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
+					|
+					(MethodDeclaration) MethodDecl
+					;
+					
+ClassDecl ::= (ClassDecl) CLASS IDENT ExtendsStmt LBRACE VarDeclSection MethodDeclSection RBRACE;
+
+ExtendsStmt ::= (ExtendsStatement) EXTENDS IDENT
+					| 
+					(NoExtendsStatement) /* epsilon */
+					;
+
+VarDeclSection ::= (VariableDeclarationSection) VarDeclList
+					|
+					(NoVariableDeclarationSection) /* epsilon */
+					;
+					
+VarDeclList ::= (VariablesDeclarations) VarDeclList VarDecl
+				|
+				(VariablesDeclarationsElem) VarDecl
+				;
+				
+AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS IDENT ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
+
+AnyMethodDeclSection ::= (AnyMethodDeclarationSection) LBRACE AnyMethodDeclList RBRACE
+						|
+						(NoAnyMethodDeclarationSection) /* epsilon */
+						;
+						
+AnyMethodDeclList ::= (AnyMethodDeclarations) AnyMethodDeclList AnyMethodDecl
+						|
+						(AnyMethodDeclaration) AnyMethodDecl
+						;
+						
+AnyMethodDecl ::= (RealMethodDeclaration) MethodDecl
+				|
+				(AbstractMethodDeclaration) ABSTRACT ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS SEMI_COLON
+				;
+					
+MethodDecl ::= (MethodDecl) ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS VarDeclSection LBRACE Statements RBRACE;
+
+ReturnType ::= (NonVoidType) Type
+				|
+				(VoidType) VOID
+				;
+				
+FormPars ::= (FormalParameters) Type VarList
+			|
+			(NoFormalParameters) /* epsilon */
+			;
+			
+Statements ::= (Statements) IDENT;
+				
+Type ::= (Type) IDENT;
