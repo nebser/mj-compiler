@@ -39,14 +39,17 @@ terminal String IDENT, CHARACTER, BOOL;
 terminal Integer NUMBER;
 terminal SEMI_COLON, LBRACKET, RBRACKET, LBRACE, RBRACE;
 terminal LPARENTHESIS, RPARENTHESIS, VOID;
+terminal IF, ELSE, FOR, BREAK, CONTINUE, RETURN, READ, PRINT;
 
 nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
 nonterminal VarDecl, AbstractClassDecl, ClassDecl;
 nonterminal ConstList, Const, ConstDefinition;
 nonterminal VarDeclSection, VarDeclList, VarList, Var, SingleVar, ArrayVar;
 nonterminal Program, Type;
-nonterminal Statements, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
+nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal ReturnType, FormPars, AbstractMethodDecl, MethodDeclList, ExtendsStmt;
+nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
+nonterminal ReturnExpr, Expr, Designator;
 
 Program ::= (Program) PROGRAM IDENT DeclSection LBRACE MethodDeclSection RBRACE;
 
@@ -143,7 +146,7 @@ AnyMethodDecl ::= (RealMethodDeclaration) MethodDecl
 				(AbstractMethodDeclaration) ABSTRACT ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS SEMI_COLON
 				;
 					
-MethodDecl ::= (MethodDecl) ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS VarDeclSection LBRACE Statements RBRACE;
+MethodDecl ::= (MethodDecl) ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS VarDeclSection LBRACE StatementList RBRACE;
 
 ReturnType ::= (NonVoidType) Type
 				|
@@ -155,6 +158,50 @@ FormPars ::= (FormalParameters) Type VarList
 			(NoFormalParameters) /* epsilon */
 			;
 			
-Statements ::= (Statements) IDENT;
+StatementList ::= (Statements) StatementList Statement
+					|
+					(SingleStatement) Statement
+					;
+					
+Statement ::= (MathedStmt) Matched
+				|
+			  (UnmatchedStmt) Unmatched
+			  |
+			  (ForStmt) FOR LPARENTHESIS OptionalDesignatorStatement SEMI_COLON Condition SEMI_COLON OptionalDesignatorStatement RPARENTHESIS Statement
+			  ;
+			  
+Matched ::= (DesignatorStmt) DesignatorStatement SEMI_COLON
+			|
+			(MatchedIf) IF Condition Matched ELSE Matched
+			|
+			(StmtList) LBRACE StatementList RBRACE
+			|
+			(Break) BREAK SEMI_COLON
+			|
+			(Continue) CONTINUE SEMI_COLON
+			|
+			(Return) RETURN ReturnExpr SEMI_COLON
+			|
+			(Read) READ LPARENTHESIS Designator RPARENTHESIS SEMI_COLON
+			|
+			(Print) PRINT LPARENTHESIS Expr RPARENTHESIS SEMI_COLON
+			|
+			(PrintWithNumber) PRINT LPARENTHESIS Expr COMMA NUMBER RPARENTHESIS SEMI_COLON
+			;
+			
+ReturnExpr ::= (RetExpr) Expr
+				|
+				(NoReturnExpr) /* epsilon */
+				;
+			
+Unmatched ::= (UnmatchedIf) IF Condition Statement
+				|
+			  (UnmatchedElse) IF Condition Matched ELSE Unmatched
+			  ;
+			  
+OptionalDesignatorStatement ::= (OptionalDesignatorStmt) DesignatorStatement
+								|
+								(NoDesignatorStmt) /* epsilon */
+								;
 				
 Type ::= (Type) IDENT;

@@ -1,42 +1,36 @@
 // generated with ast extension for cup
 // version 0.8
-// 13/0/2020 1:29:6
+// 14/0/2020 1:45:27
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Statements implements SyntaxNode {
+public class Statements extends StatementList {
 
-    private SyntaxNode parent;
-    private int line;
-    private String I1;
+    private StatementList StatementList;
+    private Statement Statement;
 
-    public Statements (String I1) {
-        this.I1=I1;
+    public Statements (StatementList StatementList, Statement Statement) {
+        this.StatementList=StatementList;
+        if(StatementList!=null) StatementList.setParent(this);
+        this.Statement=Statement;
+        if(Statement!=null) Statement.setParent(this);
     }
 
-    public String getI1() {
-        return I1;
+    public StatementList getStatementList() {
+        return StatementList;
     }
 
-    public void setI1(String I1) {
-        this.I1=I1;
+    public void setStatementList(StatementList StatementList) {
+        this.StatementList=StatementList;
     }
 
-    public SyntaxNode getParent() {
-        return parent;
+    public Statement getStatement() {
+        return Statement;
     }
 
-    public void setParent(SyntaxNode parent) {
-        this.parent=parent;
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line=line;
+    public void setStatement(Statement Statement) {
+        this.Statement=Statement;
     }
 
     public void accept(Visitor visitor) {
@@ -44,13 +38,19 @@ public class Statements implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(StatementList!=null) StatementList.accept(visitor);
+        if(Statement!=null) Statement.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(StatementList!=null) StatementList.traverseTopDown(visitor);
+        if(Statement!=null) Statement.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(StatementList!=null) StatementList.traverseBottomUp(visitor);
+        if(Statement!=null) Statement.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -59,7 +59,16 @@ public class Statements implements SyntaxNode {
         buffer.append(tab);
         buffer.append("Statements(\n");
 
-        buffer.append(" "+tab+I1);
+        if(StatementList!=null)
+            buffer.append(StatementList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(Statement!=null)
+            buffer.append(Statement.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
