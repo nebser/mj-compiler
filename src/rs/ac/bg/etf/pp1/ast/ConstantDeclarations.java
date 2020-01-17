@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 14/0/2020 1:45:27
+// 17/0/2020 1:10:35
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,11 @@ package rs.ac.bg.etf.pp1.ast;
 public class ConstantDeclarations extends DeclElem {
 
     private Type Type;
-    private String I2;
     private ConstList ConstList;
 
-    public ConstantDeclarations (Type Type, String I2, ConstList ConstList) {
+    public ConstantDeclarations (Type Type, ConstList ConstList) {
         this.Type=Type;
         if(Type!=null) Type.setParent(this);
-        this.I2=I2;
         this.ConstList=ConstList;
         if(ConstList!=null) ConstList.setParent(this);
     }
@@ -25,14 +23,6 @@ public class ConstantDeclarations extends DeclElem {
 
     public void setType(Type Type) {
         this.Type=Type;
-    }
-
-    public String getI2() {
-        return I2;
-    }
-
-    public void setI2(String I2) {
-        this.I2=I2;
     }
 
     public ConstList getConstList() {
@@ -73,9 +63,6 @@ public class ConstantDeclarations extends DeclElem {
             buffer.append(Type.toString("  "+tab));
         else
             buffer.append(tab+"  null");
-        buffer.append("\n");
-
-        buffer.append(" "+tab+I2);
         buffer.append("\n");
 
         if(ConstList!=null)

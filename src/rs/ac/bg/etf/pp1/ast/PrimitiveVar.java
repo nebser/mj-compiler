@@ -1,17 +1,15 @@
 // generated with ast extension for cup
 // version 0.8
-// 14/0/2020 1:45:27
+// 17/0/2020 1:10:35
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SingleVar implements SyntaxNode {
+public class PrimitiveVar extends Var {
 
-    private SyntaxNode parent;
-    private int line;
     private String I1;
 
-    public SingleVar (String I1) {
+    public PrimitiveVar (String I1) {
         this.I1=I1;
     }
 
@@ -21,22 +19,6 @@ public class SingleVar implements SyntaxNode {
 
     public void setI1(String I1) {
         this.I1=I1;
-    }
-
-    public SyntaxNode getParent() {
-        return parent;
-    }
-
-    public void setParent(SyntaxNode parent) {
-        this.parent=parent;
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -57,13 +39,13 @@ public class SingleVar implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SingleVar(\n");
+        buffer.append("PrimitiveVar(\n");
 
         buffer.append(" "+tab+I1);
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [SingleVar]");
+        buffer.append(") [PrimitiveVar]");
         return buffer.toString();
     }
 }

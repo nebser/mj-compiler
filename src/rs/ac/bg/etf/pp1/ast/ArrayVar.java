@@ -1,14 +1,12 @@
 // generated with ast extension for cup
 // version 0.8
-// 14/0/2020 1:45:27
+// 17/0/2020 1:10:35
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ArrayVar implements SyntaxNode {
+public class ArrayVar extends Var {
 
-    private SyntaxNode parent;
-    private int line;
     private String I1;
 
     public ArrayVar (String I1) {
@@ -21,22 +19,6 @@ public class ArrayVar implements SyntaxNode {
 
     public void setI1(String I1) {
         this.I1=I1;
-    }
-
-    public SyntaxNode getParent() {
-        return parent;
-    }
-
-    public void setParent(SyntaxNode parent) {
-        this.parent=parent;
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line=line;
     }
 
     public void accept(Visitor visitor) {

@@ -49,7 +49,7 @@ program P
 				} else
 					if (-size < x && x < 0)
 					{
-						a = """c""";
+						a = c;
 						val.putn(val.getn(-x)+1);
 					}
 				read(x);

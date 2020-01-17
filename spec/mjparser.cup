@@ -40,18 +40,25 @@ terminal Integer NUMBER;
 terminal SEMI_COLON, LBRACKET, RBRACKET, LBRACE, RBRACE;
 terminal LPARENTHESIS, RPARENTHESIS, VOID;
 terminal IF, ELSE, FOR, BREAK, CONTINUE, RETURN, READ, PRINT;
+terminal INCREMENT, DECREMENT, OR, AND;
+terminal MINUS, PLUS, MULTIPLY, DIVIDE, MOD;
+terminal NEW, COLON;
+terminal EQUALS, DIFFERS, GREATER, GREATER_OR_EQUAL, LESS, LESS_OR_EQUAL;
 
 nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
 nonterminal VarDecl, AbstractClassDecl, ClassDecl;
 nonterminal ConstList, Const, ConstDefinition;
-nonterminal VarDeclSection, VarDeclList, VarList, Var, SingleVar, ArrayVar;
+nonterminal VarDeclSection, VarDeclList, VarList, Var;
 nonterminal Program, Type;
 nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal ReturnType, FormPars, AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
-nonterminal ReturnExpr, Expr, Designator;
+nonterminal ReturnExpr, Expr, Designator, Assignop, ActPars, ExprList, Relop;
+nonterminal CondTerm, CondFact, AddExprPart, Addop, Term;
+nonterminal Factor, FactorList, Mulop;
+nonterminal DesignatorSuffix, FormParsList;
 
-Program ::= (Program) PROGRAM IDENT DeclSection LBRACE MethodDeclSection RBRACE;
+Program ::= (Program) PROGRAM IDENT DeclSection LBRACE MethodDeclList RBRACE;
 
 DeclSection ::= (DeclarationSection) DeclList
 				|
@@ -63,7 +70,7 @@ DeclList ::= (Declarations) DeclList DeclElem
 			(Declaration) DeclElem
 			;
 			
-DeclElem ::= (ConstantDeclarations) CONST Type IDENT ConstList
+DeclElem ::= (ConstantDeclarations) CONST Type ConstList
 			|
 			(GlobalVariableDeclarations) VarDecl
 			|
@@ -72,12 +79,12 @@ DeclElem ::= (ConstantDeclarations) CONST Type IDENT ConstList
 			(GlobalClassDeclarations) ClassDecl
 			;
 
-ConstList ::= (Constants) ConstList COMMA ConstDefinition
+ConstList ::= (Constants) ConstDefinition COMMA ConstList
 			|
-			 (Constant) ConstDefinition
+			 (Constant) ConstDefinition SEMI_COLON
 			;
 			
-ConstDefinition ::= (ConstDefinition) IDENT ASSIGN Const SEMI_COLON;
+ConstDefinition ::= (ConstDefinition) IDENT ASSIGN Const;
 
 Const ::= (NumberConstant) NUMBER
 					|
@@ -93,14 +100,10 @@ VarList ::= (Variables) VarList COMMA Var
 			(Variable) Var
 			;
 			
-Var ::= (PrimitiveVariable) SingleVar
+Var ::= (PrimitiveVar) IDENT
 		|
-		(ArrayVariable) ArrayVar
+		(ArrayVar) IDENT LBRACKET RBRACKET
 		;
-		
-SingleVar ::= (SingleVar) IDENT;
-		
-ArrayVar ::= (ArrayVar) IDENT LBRACKET RBRACKET;
 
 MethodDeclSection ::= (MethodDeclarationSection) LBRACE MethodDeclList RBRACE
 					|
@@ -126,7 +129,7 @@ VarDeclSection ::= (VariableDeclarationSection) VarDeclList
 					
 VarDeclList ::= (VariablesDeclarations) VarDeclList VarDecl
 				|
-				(VariablesDeclarationsElem) VarDecl
+				(VariablesDeclarationsElem) Type VarList SEMI_COLON
 				;
 				
 AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS IDENT ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
@@ -153,10 +156,15 @@ ReturnType ::= (NonVoidType) Type
 				(VoidType) VOID
 				;
 				
-FormPars ::= (FormalParameters) Type VarList
+FormPars ::= (FormalParameters) FormParsList
 			|
 			(NoFormalParameters) /* epsilon */
 			;
+			
+FormParsList ::= (ParameterList) FormParsList COMMA Type Var
+				 |
+				 (SinglePar) Type Var
+				 ;
 			
 StatementList ::= (Statements) StatementList Statement
 					|
@@ -172,7 +180,7 @@ Statement ::= (MathedStmt) Matched
 			  
 Matched ::= (DesignatorStmt) DesignatorStatement SEMI_COLON
 			|
-			(MatchedIf) IF Condition Matched ELSE Matched
+			(MatchedIf) IF LPARENTHESIS Condition RPARENTHESIS Matched ELSE Matched
 			|
 			(StmtList) LBRACE StatementList RBRACE
 			|
@@ -194,14 +202,114 @@ ReturnExpr ::= (RetExpr) Expr
 				(NoReturnExpr) /* epsilon */
 				;
 			
-Unmatched ::= (UnmatchedIf) IF Condition Statement
+Unmatched ::= (UnmatchedIf) IF LPARENTHESIS Condition RPARENTHESIS Statement
 				|
-			  (UnmatchedElse) IF Condition Matched ELSE Unmatched
+			  (UnmatchedElse) IF LPARENTHESIS Condition RPARENTHESIS Matched ELSE Unmatched
 			  ;
 			  
 OptionalDesignatorStatement ::= (OptionalDesignatorStmt) DesignatorStatement
 								|
 								(NoDesignatorStmt) /* epsilon */
 								;
+								
+DesignatorStatement ::= (AssignDesignator) Designator Assignop Expr
+						|
+						(FunctionCall) Designator LPARENTHESIS ActPars RPARENTHESIS
+						|
+						(IncrementDesignator) Designator INCREMENT
+						|
+						(DecrementDesignator) Designator DECREMENT
+						;
+						
+ActPars ::= (ActualPars) ExprList
+			|
+			(NoActualPars) /* epsilon */
+			;
+			
+ExprList ::= (ExpressionList) ExprList COMMA Expr
+			|
+			 (Expression) Expr
+			 ;
+			 
+Condition ::= (CondTermList) Condition OR CondTerm
+				|
+				(SingleCondTerm) CondTerm
+				;
+				
+CondTerm ::= (CondFactList) CondTerm AND CondFact
+			|
+			(SingleCondFact) CondFact
+			; 
+			
+CondFact ::= (ExprOp) Expr Relop Expr
+			|
+			(SingleExpr) Expr
+			;
+			
+Expr ::= (UnaryMinusExpression) MINUS Term AddExprPart
+		|
+		(NoMinusExpression) Term AddExprPart
+		;
+		
+AddExprPart ::= (AddExpressionList) AddExprPart Addop Term
+				|
+				(NoAddExpression) /* epsilon */
+				;
+				
+Addop ::= (Minus) MINUS
+			|
+		  (Plus) PLUS
+		  ;
+		  
+Term ::= (Term) Factor FactorList;
+
+FactorList ::= (Factors) FactorList Mulop Factor
+				|
+			   (NoFactorList) /* epsilon */
+			   ;
+		
+Mulop ::= (Multiply) MULTIPLY
+			|
+		  (Divide) DIVIDE
+		  	|
+		  (Mod) MOD
+		  ;
+		  
+Factor ::= (DesignatorFactor) Designator
+			|
+			(DisnatorWithActParsFactor) Designator LPARENTHESIS ActPars RPARENTHESIS
+			|
+			(ConstFactor) Const
+			|
+			(NewArrayFactor) NEW Type LBRACKET Expr RBRACKET
+			|
+			(NewObjectFactor) NEW Type
+			|
+			(ExpressionFactor) LPARENTHESIS Expr RPARENTHESIS
+			;
+			
+Designator ::= (Designator) IDENT DesignatorSuffix;
+
+DesignatorSuffix ::= (ObjectDesignatorSuffix) DesignatorSuffix COLON IDENT
+					|
+					(ArrayDesignatorSuffix) DesignatorSuffix LBRACKET Expr RBRACKET
+					|
+					(NoDesignatorSuffix) /* epsilon */
+					;
+
+Relop ::= (Equals) EQUALS
+		  |
+		  (Differs) DIFFERS
+		  |
+		  (Greater) GREATER
+		  |
+		  (GreaterOrEqual) GREATER_OR_EQUAL
+		  |
+		  (Less) LESS
+		  |
+		  (LessOrEqual) LESS_OR_EQUAL
+		  ;				
+						
+Assignop ::= ASSIGN;
 				
 Type ::= (Type) IDENT;

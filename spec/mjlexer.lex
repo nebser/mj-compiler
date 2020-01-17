@@ -82,10 +82,10 @@ import java_cup.runtime.Symbol;
 <COMMENT> "\n" { yybegin(YYINITIAL); }
 <COMMENT> . { yybegin(COMMENT); }
 
+true|false { return new_symbol(sym.BOOL, yytext()); }
 [a-z|A-Z][a-z|A-Z|0-9|_]* { return new_symbol(sym.IDENT, yytext()); }
 [0-9]+ { return new_symbol(sym.NUMBER, new Integer(yytext())); }
-\"\"\".\"\"\" { return new_symbol(sym.CHARACTER, yytext()); }
-true|false { return new_symbol(sym.BOOL, yytext()); }
+\'.\' { return new_symbol(sym.CHARACTER, yytext()); }
 
 . { throw new LexerException(yytext(), yyline+1, yycolumn); }
 

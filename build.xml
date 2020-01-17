@@ -11,7 +11,7 @@
 		</delete>
 	</target>
 	
-	<target name="lexerGen" depends="delete">
+	<target name="lexerGen">
 		<java jar="lib/JFlex.jar" fork="true">
 			<arg value="-d"/>
 			<arg value="./src/rs/ac/bg/etf/pp1"/>
@@ -19,7 +19,7 @@
 		</java>
 	</target>
 
-	<target name="parserGen" depends="delete">
+	<target name="parserGen">
 		<java jar="lib/cup_v10k.jar" fork="true">
 			<arg value="-destdir"/>
 			<arg value="src/rs/ac/bg/etf/pp1"/>
