@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class Factor implements SyntaxNode {
+public abstract class DesignatorSentence implements SyntaxNode {
 
     private SyntaxNode parent;
 

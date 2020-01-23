@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoDeclarationSection extends DeclSection {
+public class ErrorDecl extends VarDecl {
 
-    public NoDeclarationSection () {
+    public ErrorDecl () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class NoDeclarationSection extends DeclSection {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoDeclarationSection(\n");
+        buffer.append("ErrorDecl(\n");
 
         buffer.append(tab);
-        buffer.append(") [NoDeclarationSection]");
+        buffer.append(") [ErrorDecl]");
         return buffer.toString();
     }
 }

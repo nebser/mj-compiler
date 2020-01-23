@@ -5,11 +5,11 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class OptionalDesignatorStmt extends OptionalDesignatorStatement {
+public class DesignatorSen extends DesignatorSentence {
 
     private DesignatorStatement DesignatorStatement;
 
-    public OptionalDesignatorStmt (DesignatorStatement DesignatorStatement) {
+    public DesignatorSen (DesignatorStatement DesignatorStatement) {
         this.DesignatorStatement=DesignatorStatement;
         if(DesignatorStatement!=null) DesignatorStatement.setParent(this);
     }
@@ -43,7 +43,7 @@ public class OptionalDesignatorStmt extends OptionalDesignatorStatement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("OptionalDesignatorStmt(\n");
+        buffer.append("DesignatorSen(\n");
 
         if(DesignatorStatement!=null)
             buffer.append(DesignatorStatement.toString("  "+tab));
@@ -52,7 +52,7 @@ public class OptionalDesignatorStmt extends OptionalDesignatorStatement {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [OptionalDesignatorStmt]");
+        buffer.append(") [DesignatorSen]");
         return buffer.toString();
     }
 }

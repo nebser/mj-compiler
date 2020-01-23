@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2020 1:10:35
+// 23/0/2020 0:52:41
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -10,6 +10,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Unmatched Unmatched) { }
     public void visit(DesignatorSuffix DesignatorSuffix) { }
     public void visit(ReturnType ReturnType) { }
+    public void visit(DesignatorSentence DesignatorSentence) { }
     public void visit(Mulop Mulop) { }
     public void visit(Matched Matched) { }
     public void visit(AnyMethodDeclSection AnyMethodDeclSection) { }
@@ -42,6 +43,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(OptionalDesignatorStatement OptionalDesignatorStatement) { }
     public void visit(Statement Statement) { }
     public void visit(DeclElem DeclElem) { }
+    public void visit(VarDecl VarDecl) { }
     public void visit(ReturnExpr ReturnExpr) { }
     public void visit(AnyMethodDeclList AnyMethodDeclList) { }
     public void visit(MethodDeclSection MethodDeclSection) { }
@@ -98,6 +100,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(UnmatchedIf UnmatchedIf) { visit(); }
     public void visit(NoReturnExpr NoReturnExpr) { visit(); }
     public void visit(RetExpr RetExpr) { visit(); }
+    public void visit(ErrorDesignatorSen ErrorDesignatorSen) { visit(); }
+    public void visit(DesignatorSen DesignatorSen) { visit(); }
     public void visit(PrintWithNumber PrintWithNumber) { visit(); }
     public void visit(Print Print) { visit(); }
     public void visit(Read Read) { visit(); }
@@ -141,7 +145,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(PrimitiveVar PrimitiveVar) { visit(); }
     public void visit(Variable Variable) { visit(); }
     public void visit(Variables Variables) { visit(); }
-    public void visit(VarDecl VarDecl) { visit(); }
+    public void visit(ErrorDecl ErrorDecl) { visit(); }
+    public void visit(RegularVarDecl RegularVarDecl) { visit(); }
     public void visit(BoolConstant BoolConstant) { visit(); }
     public void visit(CharacterConstant CharacterConstant) { visit(); }
     public void visit(NumberConstant NumberConstant) { visit(); }

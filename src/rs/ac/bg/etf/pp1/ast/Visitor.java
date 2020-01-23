@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2020 1:10:35
+// 23/0/2020 0:52:41
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -10,6 +10,7 @@ public interface Visitor {
     public void visit(Unmatched Unmatched);
     public void visit(DesignatorSuffix DesignatorSuffix);
     public void visit(ReturnType ReturnType);
+    public void visit(DesignatorSentence DesignatorSentence);
     public void visit(Mulop Mulop);
     public void visit(Matched Matched);
     public void visit(AnyMethodDeclSection AnyMethodDeclSection);
@@ -42,6 +43,7 @@ public interface Visitor {
     public void visit(OptionalDesignatorStatement OptionalDesignatorStatement);
     public void visit(Statement Statement);
     public void visit(DeclElem DeclElem);
+    public void visit(VarDecl VarDecl);
     public void visit(ReturnExpr ReturnExpr);
     public void visit(AnyMethodDeclList AnyMethodDeclList);
     public void visit(MethodDeclSection MethodDeclSection);
@@ -98,6 +100,8 @@ public interface Visitor {
     public void visit(UnmatchedIf UnmatchedIf);
     public void visit(NoReturnExpr NoReturnExpr);
     public void visit(RetExpr RetExpr);
+    public void visit(ErrorDesignatorSen ErrorDesignatorSen);
+    public void visit(DesignatorSen DesignatorSen);
     public void visit(PrintWithNumber PrintWithNumber);
     public void visit(Print Print);
     public void visit(Read Read);
@@ -141,7 +145,8 @@ public interface Visitor {
     public void visit(PrimitiveVar PrimitiveVar);
     public void visit(Variable Variable);
     public void visit(Variables Variables);
-    public void visit(VarDecl VarDecl);
+    public void visit(ErrorDecl ErrorDecl);
+    public void visit(RegularVarDecl RegularVarDecl);
     public void visit(BoolConstant BoolConstant);
     public void visit(CharacterConstant CharacterConstant);
     public void visit(NumberConstant NumberConstant);

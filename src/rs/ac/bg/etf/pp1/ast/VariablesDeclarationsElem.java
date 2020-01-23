@@ -1,36 +1,25 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2020 1:10:35
+// 23/0/2020 0:52:41
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class VariablesDeclarationsElem extends VarDeclList {
 
-    private Type Type;
-    private VarList VarList;
+    private VarDecl VarDecl;
 
-    public VariablesDeclarationsElem (Type Type, VarList VarList) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
-        this.VarList=VarList;
-        if(VarList!=null) VarList.setParent(this);
+    public VariablesDeclarationsElem (VarDecl VarDecl) {
+        this.VarDecl=VarDecl;
+        if(VarDecl!=null) VarDecl.setParent(this);
     }
 
-    public Type getType() {
-        return Type;
+    public VarDecl getVarDecl() {
+        return VarDecl;
     }
 
-    public void setType(Type Type) {
-        this.Type=Type;
-    }
-
-    public VarList getVarList() {
-        return VarList;
-    }
-
-    public void setVarList(VarList VarList) {
-        this.VarList=VarList;
+    public void setVarDecl(VarDecl VarDecl) {
+        this.VarDecl=VarDecl;
     }
 
     public void accept(Visitor visitor) {
@@ -38,19 +27,16 @@ public class VariablesDeclarationsElem extends VarDeclList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
-        if(VarList!=null) VarList.accept(visitor);
+        if(VarDecl!=null) VarDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
-        if(VarList!=null) VarList.traverseTopDown(visitor);
+        if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
-        if(VarList!=null) VarList.traverseBottomUp(visitor);
+        if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -59,14 +45,8 @@ public class VariablesDeclarationsElem extends VarDeclList {
         buffer.append(tab);
         buffer.append("VariablesDeclarationsElem(\n");
 
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
-
-        if(VarList!=null)
-            buffer.append(VarList.toString("  "+tab));
+        if(VarDecl!=null)
+            buffer.append(VarDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

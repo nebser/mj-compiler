@@ -5,6 +5,7 @@
 		<delete>
 			<fileset dir="src/rs/ac/bg/etf/pp1">
 				<exclude name="sym_old.java"/>
+				<exclude name="Compiler.java"/>
 				<exclude name="LexerException.java"/>
 				<exclude name="util/Log4JUtils.java"/>
 			</fileset>
@@ -38,7 +39,7 @@
 		<replace dir="src" value="rs.ac.bg.etf.pp1.ast" token="src.rs.ac.bg.etf.pp1.ast" summary="true"/>
 	</target>
 	
-	<target name="compile" depends="repackage">
+	<target name="compile">
 		<javac srcdir="src/rs/ac/bg/etf/pp1" includeantruntime="false">
 			<classpath>
 				<pathelement path="lib/JFlex.jar"/>

@@ -1,25 +1,25 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2020 1:10:35
+// 23/0/2020 0:52:41
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class DesignatorStmt extends Matched {
 
-    private DesignatorStatement DesignatorStatement;
+    private DesignatorSentence DesignatorSentence;
 
-    public DesignatorStmt (DesignatorStatement DesignatorStatement) {
-        this.DesignatorStatement=DesignatorStatement;
-        if(DesignatorStatement!=null) DesignatorStatement.setParent(this);
+    public DesignatorStmt (DesignatorSentence DesignatorSentence) {
+        this.DesignatorSentence=DesignatorSentence;
+        if(DesignatorSentence!=null) DesignatorSentence.setParent(this);
     }
 
-    public DesignatorStatement getDesignatorStatement() {
-        return DesignatorStatement;
+    public DesignatorSentence getDesignatorSentence() {
+        return DesignatorSentence;
     }
 
-    public void setDesignatorStatement(DesignatorStatement DesignatorStatement) {
-        this.DesignatorStatement=DesignatorStatement;
+    public void setDesignatorSentence(DesignatorSentence DesignatorSentence) {
+        this.DesignatorSentence=DesignatorSentence;
     }
 
     public void accept(Visitor visitor) {
@@ -27,16 +27,16 @@ public class DesignatorStmt extends Matched {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(DesignatorStatement!=null) DesignatorStatement.accept(visitor);
+        if(DesignatorSentence!=null) DesignatorSentence.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(DesignatorStatement!=null) DesignatorStatement.traverseTopDown(visitor);
+        if(DesignatorSentence!=null) DesignatorSentence.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(DesignatorStatement!=null) DesignatorStatement.traverseBottomUp(visitor);
+        if(DesignatorSentence!=null) DesignatorSentence.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -45,8 +45,8 @@ public class DesignatorStmt extends Matched {
         buffer.append(tab);
         buffer.append("DesignatorStmt(\n");
 
-        if(DesignatorStatement!=null)
-            buffer.append(DesignatorStatement.toString("  "+tab));
+        if(DesignatorSentence!=null)
+            buffer.append(DesignatorSentence.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

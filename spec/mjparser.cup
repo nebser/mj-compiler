@@ -56,7 +56,7 @@ nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignat
 nonterminal ReturnExpr, Expr, Designator, Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact, AddExprPart, Addop, Term;
 nonterminal Factor, FactorList, Mulop;
-nonterminal DesignatorSuffix, FormParsList;
+nonterminal DesignatorSuffix, FormParsList, DesignatorSentence;
 
 Program ::= (Program) PROGRAM IDENT DeclSection LBRACE MethodDeclList RBRACE;
 
@@ -93,9 +93,13 @@ Const ::= (NumberConstant) NUMBER
 					(BoolConstant) BOOL
 					;
 
-VarDecl ::= (VarDecl) Type VarList SEMI_COLON;
+VarDecl ::= (RegularVarDecl) Type VarList SEMI_COLON
+			|
+			(ErrorDecl) error SEMI_COLON:l
+			{: parser.report_error("Iregularna definicija promenljive u liniji " + lleft, null); :}
+			;
 
-VarList ::= (Variables) VarList COMMA Var
+VarList ::= (Variables) Var COMMA VarList
 			|
 			(Variable) Var
 			;
@@ -129,7 +133,7 @@ VarDeclSection ::= (VariableDeclarationSection) VarDeclList
 					
 VarDeclList ::= (VariablesDeclarations) VarDeclList VarDecl
 				|
-				(VariablesDeclarationsElem) Type VarList SEMI_COLON
+				(VariablesDeclarationsElem) VarDecl
 				;
 				
 AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS IDENT ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
@@ -178,7 +182,7 @@ Statement ::= (MathedStmt) Matched
 			  (ForStmt) FOR LPARENTHESIS OptionalDesignatorStatement SEMI_COLON Condition SEMI_COLON OptionalDesignatorStatement RPARENTHESIS Statement
 			  ;
 			  
-Matched ::= (DesignatorStmt) DesignatorStatement SEMI_COLON
+Matched ::= (DesignatorStmt) DesignatorSentence
 			|
 			(MatchedIf) IF LPARENTHESIS Condition RPARENTHESIS Matched ELSE Matched
 			|
@@ -196,6 +200,12 @@ Matched ::= (DesignatorStmt) DesignatorStatement SEMI_COLON
 			|
 			(PrintWithNumber) PRINT LPARENTHESIS Expr COMMA NUMBER RPARENTHESIS SEMI_COLON
 			;
+			
+DesignatorSentence ::= (DesignatorSen) DesignatorStatement SEMI_COLON
+						|
+					   (ErrorDesignatorSen) error SEMI_COLON:l
+					   {: parser.report_error("Iregularna sintaksa za iskaz dodele u liniji " + lleft, null); :}
+					   ;
 			
 ReturnExpr ::= (RetExpr) Expr
 				|
