@@ -1,0 +1,27 @@
+// Variable error
+
+program variableError
+
+class Test
+{
+	int rez;
+	{
+		int dodaj(int a)
+		{ 
+			rez = rez + a;
+			return rez;
+		}
+		int dohvTezinu() { return tezina; }
+	}
+}
+
+{
+	void main()
+		Test t;
+		char 7, c, void, b;
+	{
+		t = new Test;
+		print(t.dodaj(10));
+		b = -+;
+	}
+}
