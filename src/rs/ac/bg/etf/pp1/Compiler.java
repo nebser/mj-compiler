@@ -23,7 +23,7 @@ public class Compiler {
 		Logger log = Logger.getLogger(Compiler.class);
 		String fileName = args[0];
 		File sourceCode = new File(fileName);
-		log.info("Compiling source file: " + sourceCode.getAbsolutePath());
+		log.info("Kompilacija fajla: " + sourceCode.getAbsolutePath());
 		try (Reader br = new BufferedReader(new FileReader(sourceCode))) {
 			Tab.init();
 			Yylex lexer = new Yylex(br);

@@ -51,14 +51,17 @@ nonterminal VarDeclSection, VarDeclList, GlobalVarDecl;
 nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
-nonterminal ReturnExpr, Expr, Designator, Assignop, ActPars, ExprList, Relop;
+nonterminal ReturnExpr, Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact, AddExprPart, Addop, Term;
-nonterminal Factor, FactorList, Mulop;
-nonterminal DesignatorSuffix, DesignatorSentence;
+nonterminal Mulop;
+nonterminal DesignatorSentence;
+nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
-nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, DesignatorSuffix;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor, Expr, FactorList;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
 
@@ -125,7 +128,7 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 					(MethodDeclaration) MethodDecl
 					;
 					
-ClassDecl ::= (ClassDecl) CLASS ClassName ExtendsStmt LBRACE VarDeclSection MethodDeclSection RBRACE;
+ClassDecl ::= (ClassDecl) CLASS ClassName ExtendsStmt LBRACE FieldDeclSection MethodDeclSection RBRACE;
 
 ClassName ::= (ClassName) IDENT:ident;
 
@@ -133,6 +136,18 @@ ExtendsStmt ::= (ExtendsStatement) EXTENDS IDENT
 					| 
 					(NoExtendsStatement) /* epsilon */
 					;
+					
+FieldDeclSection ::= (FieldDeclarationSection) FieldDeclList
+					|
+					(NoFieldDeclarationSection) /* epsilon */
+					;
+					
+FieldDeclList ::= (FieldDeclarations) FieldDeclList FieldDecl
+				  |
+				  (FieldDeclaration) FieldDecl
+				  ;
+				  
+FieldDecl ::= (FieldDecl) Type VarList SEMI_COLON;
 
 VarDeclSection ::= (VariableDeclarationSection) VarDeclList
 					|
@@ -144,7 +159,7 @@ VarDeclList ::= (VariablesDeclarations) VarDeclList VarDecl
 				(VariablesDeclarationsElem) VarDecl
 				;
 				
-AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS ClassName ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
+AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS ClassName ExtendsStmt LBRACE FieldDeclSection AnyMethodDeclSection RBRACE;
 
 AnyMethodDeclSection ::= (AnyMethodDeclarationSection) LBRACE AnyMethodDeclList RBRACE
 						|
@@ -297,7 +312,7 @@ Mulop ::= (Multiply) MULTIPLY
 		  
 Factor ::= (DesignatorFactor) Designator
 			|
-			(DisnatorWithActParsFactor) Designator LPARENTHESIS ActPars RPARENTHESIS
+			(DesignatorWithActParsFactor) Designator LPARENTHESIS ActPars RPARENTHESIS
 			|
 			(NumberFactor) NUMBER
 			|
@@ -314,7 +329,7 @@ Factor ::= (DesignatorFactor) Designator
 			
 Designator ::= (Designator) IDENT:ident DesignatorSuffix;
 
-DesignatorSuffix ::= (ObjectDesignatorSuffix) DesignatorSuffix COLON IDENT
+DesignatorSuffix ::= (ObjectDesignatorSuffix) DesignatorSuffix COLON IDENT:ident
 					|
 					(ArrayDesignatorSuffix) DesignatorSuffix LBRACKET Expr RBRACKET
 					|

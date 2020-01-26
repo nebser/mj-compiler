@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 26/0/2020 3:13:26
+// 27/0/2020 0:35:27
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -16,14 +16,16 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(AnyMethodDeclSection AnyMethodDeclSection) { }
     public void visit(Relop Relop) { }
     public void visit(Assignop Assignop) { }
+    public void visit(FieldDeclList FieldDeclList) { }
     public void visit(Var Var) { }
     public void visit(ConstDefinition ConstDefinition) { }
-    public void visit(AddExprPart AddExprPart) { }
     public void visit(StatementList StatementList) { }
+    public void visit(AddExprPart AddExprPart) { }
     public void visit(FactorList FactorList) { }
     public void visit(Addop Addop) { }
     public void visit(Factor Factor) { }
     public void visit(VarList VarList) { }
+    public void visit(FieldDeclSection FieldDeclSection) { }
     public void visit(CondTerm CondTerm) { }
     public void visit(AbstractMethodDecl AbstractMethodDecl) { }
     public void visit(ConstList ConstList) { }
@@ -68,7 +70,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(BoolFactor BoolFactor) { visit(); }
     public void visit(CharacterFactor CharacterFactor) { visit(); }
     public void visit(NumberFactor NumberFactor) { visit(); }
-    public void visit(DisnatorWithActParsFactor DisnatorWithActParsFactor) { visit(); }
+    public void visit(DesignatorWithActParsFactor DesignatorWithActParsFactor) { visit(); }
     public void visit(DesignatorFactor DesignatorFactor) { visit(); }
     public void visit(Mod Mod) { visit(); }
     public void visit(Divide Divide) { visit(); }
@@ -137,6 +139,11 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(VariablesDeclarations VariablesDeclarations) { visit(); }
     public void visit(NoVariableDeclarationSection NoVariableDeclarationSection) { visit(); }
     public void visit(VariableDeclarationSection VariableDeclarationSection) { visit(); }
+    public void visit(FieldDecl FieldDecl) { visit(); }
+    public void visit(FieldDeclaration FieldDeclaration) { visit(); }
+    public void visit(FieldDeclarations FieldDeclarations) { visit(); }
+    public void visit(NoFieldDeclarationSection NoFieldDeclarationSection) { visit(); }
+    public void visit(FieldDeclarationSection FieldDeclarationSection) { visit(); }
     public void visit(NoExtendsStatement NoExtendsStatement) { visit(); }
     public void visit(ExtendsStatement ExtendsStatement) { visit(); }
     public void visit(ClassName ClassName) { visit(); }

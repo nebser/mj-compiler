@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 26/0/2020 3:13:26
+// 27/0/2020 0:35:27
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,12 +8,12 @@ package rs.ac.bg.etf.pp1.ast;
 public class ObjectDesignatorSuffix extends DesignatorSuffix {
 
     private DesignatorSuffix DesignatorSuffix;
-    private String I2;
+    private String ident;
 
-    public ObjectDesignatorSuffix (DesignatorSuffix DesignatorSuffix, String I2) {
+    public ObjectDesignatorSuffix (DesignatorSuffix DesignatorSuffix, String ident) {
         this.DesignatorSuffix=DesignatorSuffix;
         if(DesignatorSuffix!=null) DesignatorSuffix.setParent(this);
-        this.I2=I2;
+        this.ident=ident;
     }
 
     public DesignatorSuffix getDesignatorSuffix() {
@@ -24,12 +24,12 @@ public class ObjectDesignatorSuffix extends DesignatorSuffix {
         this.DesignatorSuffix=DesignatorSuffix;
     }
 
-    public String getI2() {
-        return I2;
+    public String getIdent() {
+        return ident;
     }
 
-    public void setI2(String I2) {
-        this.I2=I2;
+    public void setIdent(String ident) {
+        this.ident=ident;
     }
 
     public void accept(Visitor visitor) {
@@ -61,7 +61,7 @@ public class ObjectDesignatorSuffix extends DesignatorSuffix {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        buffer.append(" "+tab+I2);
+        buffer.append(" "+tab+ident);
         buffer.append("\n");
 
         buffer.append(tab);

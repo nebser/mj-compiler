@@ -1,24 +1,38 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.stream.IntStream;
+
 import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.AbstractClassDecl;
+import rs.ac.bg.etf.pp1.ast.ArrayDesignatorSuffix;
 import rs.ac.bg.etf.pp1.ast.ArrayVar;
 import rs.ac.bg.etf.pp1.ast.BoolConstant;
+import rs.ac.bg.etf.pp1.ast.BoolFactor;
 import rs.ac.bg.etf.pp1.ast.CharacterConstant;
+import rs.ac.bg.etf.pp1.ast.CharacterFactor;
 import rs.ac.bg.etf.pp1.ast.ClassDecl;
 import rs.ac.bg.etf.pp1.ast.ClassName;
 import rs.ac.bg.etf.pp1.ast.Constant;
 import rs.ac.bg.etf.pp1.ast.ConstantDeclarations;
 import rs.ac.bg.etf.pp1.ast.Constants;
 import rs.ac.bg.etf.pp1.ast.Designator;
+import rs.ac.bg.etf.pp1.ast.DesignatorFactor;
+import rs.ac.bg.etf.pp1.ast.DesignatorSuffix;
+import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
+import rs.ac.bg.etf.pp1.ast.ExpressionFactor;
+import rs.ac.bg.etf.pp1.ast.FieldDecl;
 import rs.ac.bg.etf.pp1.ast.FormalParameters;
 import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
+import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
+import rs.ac.bg.etf.pp1.ast.NewObjectFactor;
 import rs.ac.bg.etf.pp1.ast.NoFormalParameters;
 import rs.ac.bg.etf.pp1.ast.NonVoidType;
 import rs.ac.bg.etf.pp1.ast.NumberConstant;
+import rs.ac.bg.etf.pp1.ast.NumberFactor;
+import rs.ac.bg.etf.pp1.ast.ObjectDesignatorSuffix;
 import rs.ac.bg.etf.pp1.ast.ParameterList;
 import rs.ac.bg.etf.pp1.ast.PrimitiveVar;
 import rs.ac.bg.etf.pp1.ast.Program;
@@ -140,6 +154,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		Obj typeObj = Tab.find(typeName);
 		if (typeObj == Tab.noObj) {
 			report_error("Tip " + typeName + " ne postoji", type);
+			type.struct = Tab.noType;
 			return;
 		}
 		type.struct = typeObj.getType();
@@ -165,12 +180,79 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	@Override
 	public void visit(Designator designator) {
 		Obj obj = Tab.find(designator.getIdent());
-		if (obj.getKind() == Obj.Con) {
-			reportSymbol("Upotrebljena konstanta", obj, designator);
+		if (obj == Tab.noObj) {
+			report_error("Simbol " + designator.getIdent() + " nije definisan", designator);
 			return;
 		}
-		if (obj.getKind() == Obj.Var && obj.getLevel() == 0) {
-			reportSymbol("Upotrebljena globalna promenljiva", obj, designator);
+		switch (obj.getKind()) {
+		case Obj.Con:
+			reportSymbol("Upotrebljena konstanta", obj, designator);
+			break;
+		case Obj.Var:
+			if (obj.getLevel() == 0) {
+				reportSymbol("Upotrebljena globalna promenljiva", obj, designator);
+			}
+			break;
+		default:
+			break;
+		}
+		designator.obj = obj;
+		Backpatcher b = new Backpatcher();
+		designator.traverseTopDown(b);
+		boolean newErrorDetected = b.isErrorDetected();
+		if (!errorDetected) {
+			errorDetected = newErrorDetected;
+		}
+		if (newErrorDetected) {
+			return;
+		}
+		ObjList designatorSuffixObjs = designator.getDesignatorSuffix().objlist;
+		if (designatorSuffixObjs == null) {
+			return;
+		}
+		if (designatorSuffixObjs.size() == 1) {
+			Obj elem = designatorSuffixObjs.getObjs().get(0);
+			if (elem.getKind() == Obj.Elem) {
+				return;
+			}
+		}
+
+		Obj currentObj = obj;
+		for (int i = 0; i < designatorSuffixObjs.getObjs().size(); i++) {
+			Obj o = designatorSuffixObjs.getObjs().get(i);
+			currentObj = currentObj.getType().getMembersTable().searchKey(o.getName());
+		}
+		designator.obj = currentObj;
+	}
+
+	@Override
+	public void visit(ObjectDesignatorSuffix objectDesignatorSuffix) {
+		objectDesignatorSuffix.objlist = new ObjList();
+		ObjList designatorSuffixObjs = objectDesignatorSuffix.getDesignatorSuffix().objlist;
+		if (designatorSuffixObjs != null) {
+			objectDesignatorSuffix.objlist.add(designatorSuffixObjs);
+		}
+		objectDesignatorSuffix.objlist
+				.add(new Obj(Obj.Fld, objectDesignatorSuffix.getIdent(), new Struct(Struct.None)));
+	}
+
+	@Override
+	public void visit(ArrayDesignatorSuffix arrayDesignatorSuffix) {
+		DesignatorSuffix ds = arrayDesignatorSuffix.getDesignatorSuffix();
+		arrayDesignatorSuffix.objlist = new ObjList();
+		if (ds.objlist == null) {
+			arrayDesignatorSuffix.objlist.add(new Obj(Obj.Elem, "", new Struct(Struct.None)));
+		} else {
+			IntStream.range(0, ds.objlist.size()).forEachOrdered(n -> {
+				Obj elem = ds.objlist.getObjs().get(n);
+				if (ds.objlist.size() - 1 == n) {
+					arrayDesignatorSuffix.objlist
+							.add(new Obj(elem.getKind(), elem.getName(), new Struct(Struct.Array)));
+				} else {
+					arrayDesignatorSuffix.objlist.add(elem);
+				}
+			});
+			;
 		}
 	}
 
@@ -239,6 +321,29 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 			} else {
 				Tab.insert(Obj.Var, varName, typeObj.getType());
+			}
+		});
+	}
+
+	@Override
+	public void visit(FieldDecl fieldDecl) {
+		String typeName = fieldDecl.getType().getIdent();
+		Obj typeObj = Tab.find(typeName);
+		if (typeObj == Tab.noObj) {
+			report_error("Tip " + typeName + " nije definisan", fieldDecl);
+			return;
+		}
+		fieldDecl.getVarList().varlist.getVars().forEach(v -> {
+			String varName = v.getName();
+			if (Tab.currentScope.findSymbol(varName) != null) {
+				report_error("Simbol " + varName + " je vec definisan", fieldDecl);
+				return;
+			}
+			if (v.isArray()) {
+				Tab.insert(Obj.Fld, varName, new Struct(Struct.Array, typeObj.getType()));
+
+			} else {
+				Tab.insert(Obj.Fld, varName, typeObj.getType());
 			}
 		});
 	}
@@ -334,22 +439,18 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		Obj typeObj = Tab.find(methodName);
 		if (typeObj != Tab.noObj && typeObj.getKind() == Obj.Meth) {
 			report_error("Metoda " + methodName + " je vec definisan", methodHeader);
-			return;
 		}
 		ObjList formPars = methodHeader.getFormPars().objlist;
 
-		if (methodName.equals(methodName)) {
-			if (Tab.currentScope.getOuter().getOuter() == null) {
+		if (methodName.equals("main")) {
+			if (Tab.currentScope.getOuter().getOuter() != null) {
 				report_error("Main metoda moze da bude deklarisana samo na globalnom nivou", methodHeader);
-				return;
 			}
 			if (formPars.size() != 0) {
 				report_error("Main metoda ne sme da ima argumente", methodHeader);
-				return;
 			}
 			if (!methodHeader.getReturnType().struct.equals(Tab.noType)) {
 				report_error("Main metoda ne sme da ima povratni tip", methodHeader);
-				return;
 			}
 			mainDetected = true;
 		}
@@ -362,13 +463,73 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(DesignatorWithActParsFactor designatorWithActParsFactor) {
+		Obj o = designatorWithActParsFactor.getDesignator().obj;
+		if (o.getKind() != Obj.Meth) {
+			report_error("Simbol " + o.getName() + " ne predstavlja metodu klase ili funkciju",
+					designatorWithActParsFactor.getDesignator());
+			designatorWithActParsFactor.struct = Tab.noType;
+			return;
+		}
+		designatorWithActParsFactor.struct = o.getType();
+	}
+
+	@Override
+	public void visit(DesignatorFactor designatorFactor) {
+		designatorFactor.struct = designatorFactor.getDesignator().obj.getType();
+	}
+
+	@Override
 	public void visit(MethodDecl methodDecl) {
-		// TODO Auto-generated method stub
 		Tab.chainLocalSymbols(methodDecl.getMethodHeader().obj);
 		Tab.closeScope();
 	}
 
+	@Override
+	public void visit(BoolFactor boolFactor) {
+		boolFactor.struct = Tab.boolType;
+	}
+
+	@Override
+	public void visit(CharacterFactor characterFactor) {
+		characterFactor.struct = Tab.charType;
+	}
+
+	@Override
+	public void visit(NumberFactor numberFactor) {
+		numberFactor.struct = Tab.charType;
+	}
+
+	@Override
+	public void visit(NewArrayFactor newArrayFactor) {
+		if (!newArrayFactor.getExpr().struct.equals(Tab.intType)) {
+			report_error("Tip izraza za velicinu alociranog niza mora biti int", newArrayFactor.getExpr());
+		}
+		newArrayFactor.struct = newArrayFactor.getType().struct;
+	}
+
+	@Override
+	public void visit(NewObjectFactor newObjectFactor) {
+		Struct typeStruct = newObjectFactor.getType().struct;
+		if (typeStruct.getKind() != Struct.Class) {
+			report_error("Tip izraza za alokaciju objekta mora biti korisnicki definisana klasa",
+					newObjectFactor.getType());
+			newObjectFactor.struct = Tab.noType;
+		} else {
+			newObjectFactor.struct = typeStruct;
+		}
+	}
+
+	@Override
+	public void visit(ExpressionFactor expressionFactor) {
+		expressionFactor.struct = expressionFactor.getExpr().struct;
+	}
+
 	public boolean isMainDetected() {
 		return mainDetected;
+	}
+
+	public boolean isErrorDetected() {
+		return errorDetected;
 	}
 }

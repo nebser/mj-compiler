@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 26/0/2020 3:13:26
+// 27/0/2020 0:35:27
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -16,14 +16,16 @@ public interface Visitor {
     public void visit(AnyMethodDeclSection AnyMethodDeclSection);
     public void visit(Relop Relop);
     public void visit(Assignop Assignop);
+    public void visit(FieldDeclList FieldDeclList);
     public void visit(Var Var);
     public void visit(ConstDefinition ConstDefinition);
-    public void visit(AddExprPart AddExprPart);
     public void visit(StatementList StatementList);
+    public void visit(AddExprPart AddExprPart);
     public void visit(FactorList FactorList);
     public void visit(Addop Addop);
     public void visit(Factor Factor);
     public void visit(VarList VarList);
+    public void visit(FieldDeclSection FieldDeclSection);
     public void visit(CondTerm CondTerm);
     public void visit(AbstractMethodDecl AbstractMethodDecl);
     public void visit(ConstList ConstList);
@@ -68,7 +70,7 @@ public interface Visitor {
     public void visit(BoolFactor BoolFactor);
     public void visit(CharacterFactor CharacterFactor);
     public void visit(NumberFactor NumberFactor);
-    public void visit(DisnatorWithActParsFactor DisnatorWithActParsFactor);
+    public void visit(DesignatorWithActParsFactor DesignatorWithActParsFactor);
     public void visit(DesignatorFactor DesignatorFactor);
     public void visit(Mod Mod);
     public void visit(Divide Divide);
@@ -137,6 +139,11 @@ public interface Visitor {
     public void visit(VariablesDeclarations VariablesDeclarations);
     public void visit(NoVariableDeclarationSection NoVariableDeclarationSection);
     public void visit(VariableDeclarationSection VariableDeclarationSection);
+    public void visit(FieldDecl FieldDecl);
+    public void visit(FieldDeclaration FieldDeclaration);
+    public void visit(FieldDeclarations FieldDeclarations);
+    public void visit(NoFieldDeclarationSection NoFieldDeclarationSection);
+    public void visit(FieldDeclarationSection FieldDeclarationSection);
     public void visit(NoExtendsStatement NoExtendsStatement);
     public void visit(ExtendsStatement ExtendsStatement);
     public void visit(ClassName ClassName);

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 26/0/2020 3:13:26
+// 27/0/2020 0:35:27
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,16 +11,16 @@ public class ClassDecl implements SyntaxNode {
     private int line;
     private ClassName ClassName;
     private ExtendsStmt ExtendsStmt;
-    private VarDeclSection VarDeclSection;
+    private FieldDeclSection FieldDeclSection;
     private MethodDeclSection MethodDeclSection;
 
-    public ClassDecl (ClassName ClassName, ExtendsStmt ExtendsStmt, VarDeclSection VarDeclSection, MethodDeclSection MethodDeclSection) {
+    public ClassDecl (ClassName ClassName, ExtendsStmt ExtendsStmt, FieldDeclSection FieldDeclSection, MethodDeclSection MethodDeclSection) {
         this.ClassName=ClassName;
         if(ClassName!=null) ClassName.setParent(this);
         this.ExtendsStmt=ExtendsStmt;
         if(ExtendsStmt!=null) ExtendsStmt.setParent(this);
-        this.VarDeclSection=VarDeclSection;
-        if(VarDeclSection!=null) VarDeclSection.setParent(this);
+        this.FieldDeclSection=FieldDeclSection;
+        if(FieldDeclSection!=null) FieldDeclSection.setParent(this);
         this.MethodDeclSection=MethodDeclSection;
         if(MethodDeclSection!=null) MethodDeclSection.setParent(this);
     }
@@ -41,12 +41,12 @@ public class ClassDecl implements SyntaxNode {
         this.ExtendsStmt=ExtendsStmt;
     }
 
-    public VarDeclSection getVarDeclSection() {
-        return VarDeclSection;
+    public FieldDeclSection getFieldDeclSection() {
+        return FieldDeclSection;
     }
 
-    public void setVarDeclSection(VarDeclSection VarDeclSection) {
-        this.VarDeclSection=VarDeclSection;
+    public void setFieldDeclSection(FieldDeclSection FieldDeclSection) {
+        this.FieldDeclSection=FieldDeclSection;
     }
 
     public MethodDeclSection getMethodDeclSection() {
@@ -80,7 +80,7 @@ public class ClassDecl implements SyntaxNode {
     public void childrenAccept(Visitor visitor) {
         if(ClassName!=null) ClassName.accept(visitor);
         if(ExtendsStmt!=null) ExtendsStmt.accept(visitor);
-        if(VarDeclSection!=null) VarDeclSection.accept(visitor);
+        if(FieldDeclSection!=null) FieldDeclSection.accept(visitor);
         if(MethodDeclSection!=null) MethodDeclSection.accept(visitor);
     }
 
@@ -88,14 +88,14 @@ public class ClassDecl implements SyntaxNode {
         accept(visitor);
         if(ClassName!=null) ClassName.traverseTopDown(visitor);
         if(ExtendsStmt!=null) ExtendsStmt.traverseTopDown(visitor);
-        if(VarDeclSection!=null) VarDeclSection.traverseTopDown(visitor);
+        if(FieldDeclSection!=null) FieldDeclSection.traverseTopDown(visitor);
         if(MethodDeclSection!=null) MethodDeclSection.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ClassName!=null) ClassName.traverseBottomUp(visitor);
         if(ExtendsStmt!=null) ExtendsStmt.traverseBottomUp(visitor);
-        if(VarDeclSection!=null) VarDeclSection.traverseBottomUp(visitor);
+        if(FieldDeclSection!=null) FieldDeclSection.traverseBottomUp(visitor);
         if(MethodDeclSection!=null) MethodDeclSection.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -117,8 +117,8 @@ public class ClassDecl implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(VarDeclSection!=null)
-            buffer.append(VarDeclSection.toString("  "+tab));
+        if(FieldDeclSection!=null)
+            buffer.append(FieldDeclSection.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

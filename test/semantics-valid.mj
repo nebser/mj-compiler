@@ -1,0 +1,24 @@
+// Variable error
+
+program semantics
+
+const int intConst1 = 4, intConst2 = 7;
+const bool trueBoolConst= true, falseBoolConst = false;
+const char charCOnst = 'A';
+int intGlVar1, intGlArrayVar[];
+char charGlVar;
+
+{
+	void main()
+	{
+		intGlVar1 = intConst1;
+		print(intConst1);
+		
+		intGlArrayVar = new int[2];
+		intGlArrayVar[0] = intConst2;
+		intGlArrayVar[1] = intGlVar1 + intConst2;
+		
+		print(intGlArrayVar[0]);
+		print(intGlArrayVar[1]);
+	}
+}
