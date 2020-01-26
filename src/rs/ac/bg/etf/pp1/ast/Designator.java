@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 23/0/2020 0:52:41
+// 26/0/2020 3:13:26
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,21 +9,21 @@ public class Designator implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private String I1;
+    private String ident;
     private DesignatorSuffix DesignatorSuffix;
 
-    public Designator (String I1, DesignatorSuffix DesignatorSuffix) {
-        this.I1=I1;
+    public Designator (String ident, DesignatorSuffix DesignatorSuffix) {
+        this.ident=ident;
         this.DesignatorSuffix=DesignatorSuffix;
         if(DesignatorSuffix!=null) DesignatorSuffix.setParent(this);
     }
 
-    public String getI1() {
-        return I1;
+    public String getIdent() {
+        return ident;
     }
 
-    public void setI1(String I1) {
-        this.I1=I1;
+    public void setIdent(String ident) {
+        this.ident=ident;
     }
 
     public DesignatorSuffix getDesignatorSuffix() {
@@ -73,7 +73,7 @@ public class Designator implements SyntaxNode {
         buffer.append(tab);
         buffer.append("Designator(\n");
 
-        buffer.append(" "+tab+I1);
+        buffer.append(" "+tab+ident);
         buffer.append("\n");
 
         if(DesignatorSuffix!=null)

@@ -1,24 +1,34 @@
 // generated with ast extension for cup
 // version 0.8
-// 23/0/2020 0:52:41
+// 26/0/2020 3:13:26
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class CharacterConstant extends Const {
+public class CharacterConstant extends ConstDefinition {
 
-    private String C1;
+    private String name;
+    private String value;
 
-    public CharacterConstant (String C1) {
-        this.C1=C1;
+    public CharacterConstant (String name, String value) {
+        this.name=name;
+        this.value=value;
     }
 
-    public String getC1() {
-        return C1;
+    public String getName() {
+        return name;
     }
 
-    public void setC1(String C1) {
-        this.C1=C1;
+    public void setName(String name) {
+        this.name=name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value=value;
     }
 
     public void accept(Visitor visitor) {
@@ -41,7 +51,10 @@ public class CharacterConstant extends Const {
         buffer.append(tab);
         buffer.append("CharacterConstant(\n");
 
-        buffer.append(" "+tab+C1);
+        buffer.append(" "+tab+name);
+        buffer.append("\n");
+
+        buffer.append(" "+tab+value);
         buffer.append("\n");
 
         buffer.append(tab);

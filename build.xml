@@ -6,8 +6,14 @@
 			<fileset dir="src/rs/ac/bg/etf/pp1">
 				<exclude name="sym_old.java"/>
 				<exclude name="Compiler.java"/>
+				<exclude name="SemanticAnalyzer.java"/>
+				<exclude name="CodeGenerator.java"/>
 				<exclude name="LexerException.java"/>
 				<exclude name="util/Log4JUtils.java"/>
+				<exclude name="util/ObjList.java"/>
+				<exclude name="util/Tab.java"/>
+				<exclude name="util/Var.java"/>
+				<exclude name="util/VarList.java"/>
 			</fileset>
 		</delete>
 	</target>
@@ -45,6 +51,8 @@
 				<pathelement path="lib/JFlex.jar"/>
 				<pathelement path="lib/cup_v10k.jar"/>
 				<pathelement path="lib/log4j-1.2.17.jar"/>
+				<pathelement path="lib/symboltable-1-1.jar"/>
+				<pathelement path="lib/mj-runtime.jar"/>
 			</classpath>	
 		</javac>
 	

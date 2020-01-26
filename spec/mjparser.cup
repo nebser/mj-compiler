@@ -47,18 +47,24 @@ terminal EQUALS, DIFFERS, GREATER, GREATER_OR_EQUAL, LESS, LESS_OR_EQUAL;
 
 nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
 nonterminal VarDecl, AbstractClassDecl, ClassDecl;
-nonterminal ConstList, Const, ConstDefinition;
-nonterminal VarDeclSection, VarDeclList, VarList, Var;
-nonterminal Program, Type;
+nonterminal VarDeclSection, VarDeclList, GlobalVarDecl;
 nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
-nonterminal ReturnType, FormPars, AbstractMethodDecl, MethodDeclList, ExtendsStmt;
+nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
 nonterminal ReturnExpr, Expr, Designator, Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact, AddExprPart, Addop, Term;
 nonterminal Factor, FactorList, Mulop;
-nonterminal DesignatorSuffix, FormParsList, DesignatorSentence;
+nonterminal DesignatorSuffix, DesignatorSentence;
 
-Program ::= (Program) PROGRAM IDENT DeclSection LBRACE MethodDeclList RBRACE;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType;
+nonterminal rs.ac.bg.etf.pp1.util.Var Var;
+nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
+
+Program ::= (Program) PROGRAM ProgramName:p DeclSection LBRACE MethodDeclList RBRACE;
+
+ProgramName ::= (ProgramName) IDENT:progName;
 
 DeclSection ::= (DeclarationSection) DeclList
 				|
@@ -72,7 +78,7 @@ DeclList ::= (Declarations) DeclList DeclElem
 			
 DeclElem ::= (ConstantDeclarations) CONST Type ConstList
 			|
-			(GlobalVariableDeclarations) VarDecl
+			(GlobalVariableDeclarations) GlobalVarDecl
 			|
 			(GlobalAbstactClassDeclarations) AbstractClassDecl
 			|
@@ -84,14 +90,14 @@ ConstList ::= (Constants) ConstDefinition COMMA ConstList
 			 (Constant) ConstDefinition SEMI_COLON
 			;
 			
-ConstDefinition ::= (ConstDefinition) IDENT ASSIGN Const;
-
-Const ::= (NumberConstant) NUMBER
+ConstDefinition ::= (NumberConstant) IDENT:name ASSIGN NUMBER:value
 					|
-					(CharacterConstant) CHARACTER
+					(CharacterConstant) IDENT:name ASSIGN CHARACTER:value
 					|
-					(BoolConstant) BOOL
+					(BoolConstant) IDENT:name ASSIGN BOOL:value
 					;
+					
+GlobalVarDecl ::= (GlobalVarDecl) Type VarList SEMI_COLON;
 
 VarDecl ::= (RegularVarDecl) Type VarList SEMI_COLON
 			|
@@ -104,9 +110,9 @@ VarList ::= (Variables) Var COMMA VarList
 			(Variable) Var
 			;
 			
-Var ::= (PrimitiveVar) IDENT
+Var ::= (PrimitiveVar) IDENT:ident
 		|
-		(ArrayVar) IDENT LBRACKET RBRACKET
+		(ArrayVar) IDENT:ident LBRACKET RBRACKET
 		;
 
 MethodDeclSection ::= (MethodDeclarationSection) LBRACE MethodDeclList RBRACE
@@ -119,7 +125,9 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 					(MethodDeclaration) MethodDecl
 					;
 					
-ClassDecl ::= (ClassDecl) CLASS IDENT ExtendsStmt LBRACE VarDeclSection MethodDeclSection RBRACE;
+ClassDecl ::= (ClassDecl) CLASS ClassName ExtendsStmt LBRACE VarDeclSection MethodDeclSection RBRACE;
+
+ClassName ::= (ClassName) IDENT:ident;
 
 ExtendsStmt ::= (ExtendsStatement) EXTENDS IDENT
 					| 
@@ -136,7 +144,7 @@ VarDeclList ::= (VariablesDeclarations) VarDeclList VarDecl
 				(VariablesDeclarationsElem) VarDecl
 				;
 				
-AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS IDENT ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
+AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS ClassName ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
 
 AnyMethodDeclSection ::= (AnyMethodDeclarationSection) LBRACE AnyMethodDeclList RBRACE
 						|
@@ -150,10 +158,12 @@ AnyMethodDeclList ::= (AnyMethodDeclarations) AnyMethodDeclList AnyMethodDecl
 						
 AnyMethodDecl ::= (RealMethodDeclaration) MethodDecl
 				|
-				(AbstractMethodDeclaration) ABSTRACT ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS SEMI_COLON
+				(AbstractMethodDeclaration) ABSTRACT MethodHeader SEMI_COLON
 				;
 					
-MethodDecl ::= (MethodDecl) ReturnType IDENT LPARENTHESIS FormPars RPARENTHESIS VarDeclSection LBRACE StatementList RBRACE;
+MethodDecl ::= (MethodDecl) MethodHeader VarDeclSection LBRACE StatementList RBRACE;
+
+MethodHeader ::= (MethodHeader) ReturnType IDENT:ident LPARENTHESIS FormPars RPARENTHESIS;
 
 ReturnType ::= (NonVoidType) Type
 				|
@@ -289,7 +299,11 @@ Factor ::= (DesignatorFactor) Designator
 			|
 			(DisnatorWithActParsFactor) Designator LPARENTHESIS ActPars RPARENTHESIS
 			|
-			(ConstFactor) Const
+			(NumberFactor) NUMBER
+			|
+			(CharacterFactor) CHARACTER
+			|
+			(BoolFactor) BOOL
 			|
 			(NewArrayFactor) NEW Type LBRACKET Expr RBRACKET
 			|
@@ -298,7 +312,7 @@ Factor ::= (DesignatorFactor) Designator
 			(ExpressionFactor) LPARENTHESIS Expr RPARENTHESIS
 			;
 			
-Designator ::= (Designator) IDENT DesignatorSuffix;
+Designator ::= (Designator) IDENT:ident DesignatorSuffix;
 
 DesignatorSuffix ::= (ObjectDesignatorSuffix) DesignatorSuffix COLON IDENT
 					|
@@ -322,4 +336,4 @@ Relop ::= (Equals) EQUALS
 						
 Assignop ::= ASSIGN;
 				
-Type ::= (Type) IDENT;
+Type ::= (Type) IDENT:ident;

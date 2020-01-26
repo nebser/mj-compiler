@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 23/0/2020 0:52:41
+// 26/0/2020 3:13:26
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,8 +8,8 @@ package rs.ac.bg.etf.pp1.ast;
 public interface Visitor { 
 
     public void visit(Unmatched Unmatched);
-    public void visit(DesignatorSuffix DesignatorSuffix);
     public void visit(ReturnType ReturnType);
+    public void visit(DesignatorSuffix DesignatorSuffix);
     public void visit(DesignatorSentence DesignatorSentence);
     public void visit(Mulop Mulop);
     public void visit(Matched Matched);
@@ -17,20 +17,21 @@ public interface Visitor {
     public void visit(Relop Relop);
     public void visit(Assignop Assignop);
     public void visit(Var Var);
+    public void visit(ConstDefinition ConstDefinition);
     public void visit(AddExprPart AddExprPart);
     public void visit(StatementList StatementList);
     public void visit(FactorList FactorList);
     public void visit(Addop Addop);
     public void visit(Factor Factor);
-    public void visit(CondTerm CondTerm);
     public void visit(VarList VarList);
+    public void visit(CondTerm CondTerm);
     public void visit(AbstractMethodDecl AbstractMethodDecl);
     public void visit(ConstList ConstList);
     public void visit(DeclList DeclList);
     public void visit(FormParsList FormParsList);
     public void visit(Condition Condition);
-    public void visit(ExprList ExprList);
     public void visit(DeclSection DeclSection);
+    public void visit(ExprList ExprList);
     public void visit(ExtendsStmt ExtendsStmt);
     public void visit(VarDeclList VarDeclList);
     public void visit(Expr Expr);
@@ -38,7 +39,6 @@ public interface Visitor {
     public void visit(ActPars ActPars);
     public void visit(DesignatorStatement DesignatorStatement);
     public void visit(AnyMethodDecl AnyMethodDecl);
-    public void visit(Const Const);
     public void visit(VarDeclSection VarDeclSection);
     public void visit(OptionalDesignatorStatement OptionalDesignatorStatement);
     public void visit(Statement Statement);
@@ -65,7 +65,9 @@ public interface Visitor {
     public void visit(ExpressionFactor ExpressionFactor);
     public void visit(NewObjectFactor NewObjectFactor);
     public void visit(NewArrayFactor NewArrayFactor);
-    public void visit(ConstFactor ConstFactor);
+    public void visit(BoolFactor BoolFactor);
+    public void visit(CharacterFactor CharacterFactor);
+    public void visit(NumberFactor NumberFactor);
     public void visit(DisnatorWithActParsFactor DisnatorWithActParsFactor);
     public void visit(DesignatorFactor DesignatorFactor);
     public void visit(Mod Mod);
@@ -122,6 +124,7 @@ public interface Visitor {
     public void visit(FormalParameters FormalParameters);
     public void visit(VoidType VoidType);
     public void visit(NonVoidType NonVoidType);
+    public void visit(MethodHeader MethodHeader);
     public void visit(MethodDecl MethodDecl);
     public void visit(AbstractMethodDeclaration AbstractMethodDeclaration);
     public void visit(RealMethodDeclaration RealMethodDeclaration);
@@ -136,6 +139,7 @@ public interface Visitor {
     public void visit(VariableDeclarationSection VariableDeclarationSection);
     public void visit(NoExtendsStatement NoExtendsStatement);
     public void visit(ExtendsStatement ExtendsStatement);
+    public void visit(ClassName ClassName);
     public void visit(ClassDecl ClassDecl);
     public void visit(MethodDeclaration MethodDeclaration);
     public void visit(MethodDeclarations MethodDeclarations);
@@ -147,10 +151,10 @@ public interface Visitor {
     public void visit(Variables Variables);
     public void visit(ErrorDecl ErrorDecl);
     public void visit(RegularVarDecl RegularVarDecl);
+    public void visit(GlobalVarDecl GlobalVarDecl);
     public void visit(BoolConstant BoolConstant);
     public void visit(CharacterConstant CharacterConstant);
     public void visit(NumberConstant NumberConstant);
-    public void visit(ConstDefinition ConstDefinition);
     public void visit(Constant Constant);
     public void visit(Constants Constants);
     public void visit(GlobalClassDeclarations GlobalClassDeclarations);
@@ -161,6 +165,7 @@ public interface Visitor {
     public void visit(Declarations Declarations);
     public void visit(NoDeclarationSection NoDeclarationSection);
     public void visit(DeclarationSection DeclarationSection);
+    public void visit(ProgramName ProgramName);
     public void visit(Program Program);
 
 }

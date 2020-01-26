@@ -1,24 +1,34 @@
 // generated with ast extension for cup
 // version 0.8
-// 23/0/2020 0:52:41
+// 26/0/2020 3:13:26
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class BoolConstant extends Const {
+public class BoolConstant extends ConstDefinition {
 
-    private String B1;
+    private String name;
+    private String value;
 
-    public BoolConstant (String B1) {
-        this.B1=B1;
+    public BoolConstant (String name, String value) {
+        this.name=name;
+        this.value=value;
     }
 
-    public String getB1() {
-        return B1;
+    public String getName() {
+        return name;
     }
 
-    public void setB1(String B1) {
-        this.B1=B1;
+    public void setName(String name) {
+        this.name=name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value=value;
     }
 
     public void accept(Visitor visitor) {
@@ -41,7 +51,10 @@ public class BoolConstant extends Const {
         buffer.append(tab);
         buffer.append("BoolConstant(\n");
 
-        buffer.append(" "+tab+B1);
+        buffer.append(" "+tab+name);
+        buffer.append("\n");
+
+        buffer.append(" "+tab+value);
         buffer.append("\n");
 
         buffer.append(tab);

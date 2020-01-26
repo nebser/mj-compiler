@@ -11,6 +11,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import java_cup.runtime.Symbol;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
+import rs.ac.bg.etf.pp1.util.Tab;
 
 public class Compiler {
 	static {
@@ -24,6 +25,7 @@ public class Compiler {
 		File sourceCode = new File(fileName);
 		log.info("Compiling source file: " + sourceCode.getAbsolutePath());
 		try (Reader br = new BufferedReader(new FileReader(sourceCode))) {
+			Tab.init();
 			Yylex lexer = new Yylex(br);
 
 			MJParser p = new MJParser(lexer);
@@ -33,6 +35,11 @@ public class Compiler {
 			// ispis sintaksnog stabla
 			log.info(prog.toString(""));
 			log.info("===================================");
+
+			SemanticAnalyzer sa = new SemanticAnalyzer();
+			prog.traverseBottomUp(sa);
+
+			Tab.dump();
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
