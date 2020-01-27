@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 0:35:27
+// 27/0/2020 1:29:9
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoFactorList extends FactorList {
+public class ModEquals extends Mulop {
 
-    public NoFactorList () {
+    public ModEquals () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class NoFactorList extends FactorList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoFactorList(\n");
+        buffer.append("ModEquals(\n");
 
         buffer.append(tab);
-        buffer.append(") [NoFactorList]");
+        buffer.append(") [ModEquals]");
         return buffer.toString();
     }
 }

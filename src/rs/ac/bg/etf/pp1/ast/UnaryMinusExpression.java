@@ -1,36 +1,35 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 0:35:27
+// 27/0/2020 1:29:9
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class UnaryMinusExpression extends Expr {
 
-    private Term Term;
-    private AddExprPart AddExprPart;
+    private String M1;
+    private AddExpr AddExpr;
 
-    public UnaryMinusExpression (Term Term, AddExprPart AddExprPart) {
-        this.Term=Term;
-        if(Term!=null) Term.setParent(this);
-        this.AddExprPart=AddExprPart;
-        if(AddExprPart!=null) AddExprPart.setParent(this);
+    public UnaryMinusExpression (String M1, AddExpr AddExpr) {
+        this.M1=M1;
+        this.AddExpr=AddExpr;
+        if(AddExpr!=null) AddExpr.setParent(this);
     }
 
-    public Term getTerm() {
-        return Term;
+    public String getM1() {
+        return M1;
     }
 
-    public void setTerm(Term Term) {
-        this.Term=Term;
+    public void setM1(String M1) {
+        this.M1=M1;
     }
 
-    public AddExprPart getAddExprPart() {
-        return AddExprPart;
+    public AddExpr getAddExpr() {
+        return AddExpr;
     }
 
-    public void setAddExprPart(AddExprPart AddExprPart) {
-        this.AddExprPart=AddExprPart;
+    public void setAddExpr(AddExpr AddExpr) {
+        this.AddExpr=AddExpr;
     }
 
     public void accept(Visitor visitor) {
@@ -38,19 +37,16 @@ public class UnaryMinusExpression extends Expr {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Term!=null) Term.accept(visitor);
-        if(AddExprPart!=null) AddExprPart.accept(visitor);
+        if(AddExpr!=null) AddExpr.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Term!=null) Term.traverseTopDown(visitor);
-        if(AddExprPart!=null) AddExprPart.traverseTopDown(visitor);
+        if(AddExpr!=null) AddExpr.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Term!=null) Term.traverseBottomUp(visitor);
-        if(AddExprPart!=null) AddExprPart.traverseBottomUp(visitor);
+        if(AddExpr!=null) AddExpr.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -59,14 +55,11 @@ public class UnaryMinusExpression extends Expr {
         buffer.append(tab);
         buffer.append("UnaryMinusExpression(\n");
 
-        if(Term!=null)
-            buffer.append(Term.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
+        buffer.append(" "+tab+M1);
         buffer.append("\n");
 
-        if(AddExprPart!=null)
-            buffer.append(AddExprPart.toString("  "+tab));
+        if(AddExpr!=null)
+            buffer.append(AddExpr.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

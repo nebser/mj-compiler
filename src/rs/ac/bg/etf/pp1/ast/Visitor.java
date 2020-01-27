@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 0:35:27
+// 27/0/2020 1:29:9
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -12,6 +12,7 @@ public interface Visitor {
     public void visit(DesignatorSuffix DesignatorSuffix);
     public void visit(DesignatorSentence DesignatorSentence);
     public void visit(Mulop Mulop);
+    public void visit(AddExpr AddExpr);
     public void visit(Matched Matched);
     public void visit(AnyMethodDeclSection AnyMethodDeclSection);
     public void visit(Relop Relop);
@@ -20,16 +21,16 @@ public interface Visitor {
     public void visit(Var Var);
     public void visit(ConstDefinition ConstDefinition);
     public void visit(StatementList StatementList);
-    public void visit(AddExprPart AddExprPart);
     public void visit(FactorList FactorList);
     public void visit(Addop Addop);
     public void visit(Factor Factor);
     public void visit(VarList VarList);
-    public void visit(FieldDeclSection FieldDeclSection);
     public void visit(CondTerm CondTerm);
+    public void visit(FieldDeclSection FieldDeclSection);
     public void visit(AbstractMethodDecl AbstractMethodDecl);
     public void visit(ConstList ConstList);
     public void visit(DeclList DeclList);
+    public void visit(Term Term);
     public void visit(FormParsList FormParsList);
     public void visit(Condition Condition);
     public void visit(DeclSection DeclSection);
@@ -72,16 +73,20 @@ public interface Visitor {
     public void visit(NumberFactor NumberFactor);
     public void visit(DesignatorWithActParsFactor DesignatorWithActParsFactor);
     public void visit(DesignatorFactor DesignatorFactor);
+    public void visit(ModEquals ModEquals);
+    public void visit(DivideEquals DivideEquals);
+    public void visit(MultiplyEquals MultiplyEquals);
     public void visit(Mod Mod);
     public void visit(Divide Divide);
     public void visit(Multiply Multiply);
-    public void visit(NoFactorList NoFactorList);
-    public void visit(Factors Factors);
-    public void visit(Term Term);
+    public void visit(FactorTerm FactorTerm);
+    public void visit(MulTerm MulTerm);
+    public void visit(MinusEquals MinusEquals);
+    public void visit(PlusEquals PlusEquals);
     public void visit(Plus Plus);
     public void visit(Minus Minus);
-    public void visit(NoAddExpression NoAddExpression);
-    public void visit(AddExpressionList AddExpressionList);
+    public void visit(TermExpression TermExpression);
+    public void visit(AddExpression AddExpression);
     public void visit(NoMinusExpression NoMinusExpression);
     public void visit(UnaryMinusExpression UnaryMinusExpression);
     public void visit(SingleExpr SingleExpr);

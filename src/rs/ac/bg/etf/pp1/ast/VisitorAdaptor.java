@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 0:35:27
+// 27/0/2020 1:29:9
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -12,6 +12,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(DesignatorSuffix DesignatorSuffix) { }
     public void visit(DesignatorSentence DesignatorSentence) { }
     public void visit(Mulop Mulop) { }
+    public void visit(AddExpr AddExpr) { }
     public void visit(Matched Matched) { }
     public void visit(AnyMethodDeclSection AnyMethodDeclSection) { }
     public void visit(Relop Relop) { }
@@ -20,16 +21,16 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Var Var) { }
     public void visit(ConstDefinition ConstDefinition) { }
     public void visit(StatementList StatementList) { }
-    public void visit(AddExprPart AddExprPart) { }
     public void visit(FactorList FactorList) { }
     public void visit(Addop Addop) { }
     public void visit(Factor Factor) { }
     public void visit(VarList VarList) { }
-    public void visit(FieldDeclSection FieldDeclSection) { }
     public void visit(CondTerm CondTerm) { }
+    public void visit(FieldDeclSection FieldDeclSection) { }
     public void visit(AbstractMethodDecl AbstractMethodDecl) { }
     public void visit(ConstList ConstList) { }
     public void visit(DeclList DeclList) { }
+    public void visit(Term Term) { }
     public void visit(FormParsList FormParsList) { }
     public void visit(Condition Condition) { }
     public void visit(DeclSection DeclSection) { }
@@ -72,16 +73,20 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(NumberFactor NumberFactor) { visit(); }
     public void visit(DesignatorWithActParsFactor DesignatorWithActParsFactor) { visit(); }
     public void visit(DesignatorFactor DesignatorFactor) { visit(); }
+    public void visit(ModEquals ModEquals) { visit(); }
+    public void visit(DivideEquals DivideEquals) { visit(); }
+    public void visit(MultiplyEquals MultiplyEquals) { visit(); }
     public void visit(Mod Mod) { visit(); }
     public void visit(Divide Divide) { visit(); }
     public void visit(Multiply Multiply) { visit(); }
-    public void visit(NoFactorList NoFactorList) { visit(); }
-    public void visit(Factors Factors) { visit(); }
-    public void visit(Term Term) { visit(); }
+    public void visit(FactorTerm FactorTerm) { visit(); }
+    public void visit(MulTerm MulTerm) { visit(); }
+    public void visit(MinusEquals MinusEquals) { visit(); }
+    public void visit(PlusEquals PlusEquals) { visit(); }
     public void visit(Plus Plus) { visit(); }
     public void visit(Minus Minus) { visit(); }
-    public void visit(NoAddExpression NoAddExpression) { visit(); }
-    public void visit(AddExpressionList AddExpressionList) { visit(); }
+    public void visit(TermExpression TermExpression) { visit(); }
+    public void visit(AddExpression AddExpression) { visit(); }
     public void visit(NoMinusExpression NoMinusExpression) { visit(); }
     public void visit(UnaryMinusExpression UnaryMinusExpression) { visit(); }
     public void visit(SingleExpr SingleExpr) { visit(); }

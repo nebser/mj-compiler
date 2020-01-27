@@ -1,15 +1,17 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 0:35:27
+// 27/0/2020 1:29:9
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class AddExprPart implements SyntaxNode {
+public abstract class AddExpr implements SyntaxNode {
 
     private SyntaxNode parent;
 
     private int line;
+
+    public rs.etf.pp1.symboltable.concepts.Struct struct = null;
 
     public SyntaxNode getParent() {
         return parent;

@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Break extends Matched {
+public class DivideEquals extends Mulop {
 
-    public Break () {
+    public DivideEquals () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class Break extends Matched {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Break(\n");
+        buffer.append("DivideEquals(\n");
 
         buffer.append(tab);
-        buffer.append(") [Break]");
+        buffer.append(") [DivideEquals]");
         return buffer.toString();
     }
 }

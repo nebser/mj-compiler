@@ -1,31 +1,31 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 0:35:27
+// 27/0/2020 1:29:9
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Factors extends FactorList {
+public class MulTerm extends Term {
 
-    private FactorList FactorList;
+    private Term Term;
     private Mulop Mulop;
     private Factor Factor;
 
-    public Factors (FactorList FactorList, Mulop Mulop, Factor Factor) {
-        this.FactorList=FactorList;
-        if(FactorList!=null) FactorList.setParent(this);
+    public MulTerm (Term Term, Mulop Mulop, Factor Factor) {
+        this.Term=Term;
+        if(Term!=null) Term.setParent(this);
         this.Mulop=Mulop;
         if(Mulop!=null) Mulop.setParent(this);
         this.Factor=Factor;
         if(Factor!=null) Factor.setParent(this);
     }
 
-    public FactorList getFactorList() {
-        return FactorList;
+    public Term getTerm() {
+        return Term;
     }
 
-    public void setFactorList(FactorList FactorList) {
-        this.FactorList=FactorList;
+    public void setTerm(Term Term) {
+        this.Term=Term;
     }
 
     public Mulop getMulop() {
@@ -49,20 +49,20 @@ public class Factors extends FactorList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(FactorList!=null) FactorList.accept(visitor);
+        if(Term!=null) Term.accept(visitor);
         if(Mulop!=null) Mulop.accept(visitor);
         if(Factor!=null) Factor.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(FactorList!=null) FactorList.traverseTopDown(visitor);
+        if(Term!=null) Term.traverseTopDown(visitor);
         if(Mulop!=null) Mulop.traverseTopDown(visitor);
         if(Factor!=null) Factor.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(FactorList!=null) FactorList.traverseBottomUp(visitor);
+        if(Term!=null) Term.traverseBottomUp(visitor);
         if(Mulop!=null) Mulop.traverseBottomUp(visitor);
         if(Factor!=null) Factor.traverseBottomUp(visitor);
         accept(visitor);
@@ -71,10 +71,10 @@ public class Factors extends FactorList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Factors(\n");
+        buffer.append("MulTerm(\n");
 
-        if(FactorList!=null)
-            buffer.append(FactorList.toString("  "+tab));
+        if(Term!=null)
+            buffer.append(Term.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -92,7 +92,7 @@ public class Factors extends FactorList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Factors]");
+        buffer.append(") [MulTerm]");
         return buffer.toString();
     }
 }

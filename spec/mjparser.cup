@@ -35,13 +35,13 @@ parser code {:
 :}
 
 terminal PROGRAM, CONST, COMMA, CLASS, EXTENDS, ABSTRACT, ASSIGN;
-terminal String IDENT, CHARACTER, BOOL;
+terminal String IDENT, CHARACTER, BOOL, MINUS, PLUS;
 terminal Integer NUMBER;
 terminal SEMI_COLON, LBRACKET, RBRACKET, LBRACE, RBRACE;
 terminal LPARENTHESIS, RPARENTHESIS, VOID;
 terminal IF, ELSE, FOR, BREAK, CONTINUE, RETURN, READ, PRINT;
 terminal INCREMENT, DECREMENT, OR, AND;
-terminal MINUS, PLUS, MULTIPLY, DIVIDE, MOD;
+terminal MULTIPLY, DIVIDE, MOD;
 terminal NEW, COLON;
 terminal EQUALS, DIFFERS, GREATER, GREATER_OR_EQUAL, LESS, LESS_OR_EQUAL;
 
@@ -52,8 +52,7 @@ nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, A
 nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
 nonterminal ReturnExpr, Assignop, ActPars, ExprList, Relop;
-nonterminal CondTerm, CondFact, AddExprPart, Addop, Term;
-nonterminal Mulop;
+nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
 nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
 
@@ -61,9 +60,10 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefin
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, DesignatorSuffix;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor, Expr, FactorList;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor, Expr, FactorList, AddExpr, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
+nonterminal Addop, Mulop;
 
 Program ::= (Program) PROGRAM ProgramName:p DeclSection LBRACE MethodDeclList RBRACE;
 
@@ -281,33 +281,41 @@ CondFact ::= (ExprOp) Expr Relop Expr
 			(SingleExpr) Expr
 			;
 			
-Expr ::= (UnaryMinusExpression) MINUS Term AddExprPart
-		|
-		(NoMinusExpression) Term AddExprPart
-		;
-		
-AddExprPart ::= (AddExpressionList) AddExprPart Addop Term
-				|
-				(NoAddExpression) /* epsilon */
-				;
+Expr ::= (UnaryMinusExpression) MINUS AddExpr
+		 |
+		 (NoMinusExpression) AddExpr
+		 ;
+		 
+AddExpr ::= (AddExpression) AddExpr Addop Term
+			|
+			(TermExpression) Term
+			;
 				
 Addop ::= (Minus) MINUS
 			|
 		  (Plus) PLUS
+		  |
+		  (PlusEquals) PLUS EQUALS
+		  |
+		  (MinusEquals) MINUS EQUALS
 		  ;
 		  
-Term ::= (Term) Factor FactorList;
-
-FactorList ::= (Factors) FactorList Mulop Factor
-				|
-			   (NoFactorList) /* epsilon */
-			   ;
-		
+Term ::= (MulTerm) Term Mulop Factor
+		 |
+		 (FactorTerm) Factor
+		 ;
+		  
 Mulop ::= (Multiply) MULTIPLY
 			|
 		  (Divide) DIVIDE
 		  	|
 		  (Mod) MOD
+		  |
+		  (MultiplyEquals) MULTIPLY EQUALS
+		  |
+		  (DivideEquals) DIVIDE EQUALS
+		  |
+		  (ModEquals) MOD EQUALS
 		  ;
 		  
 Factor ::= (DesignatorFactor) Designator
@@ -335,6 +343,7 @@ DesignatorSuffix ::= (ObjectDesignatorSuffix) DesignatorSuffix COLON IDENT:ident
 					|
 					(NoDesignatorSuffix) /* epsilon */
 					;
+					
 
 Relop ::= (Equals) EQUALS
 		  |
