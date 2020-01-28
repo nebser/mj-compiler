@@ -17,6 +17,7 @@ char charGlVar;
 		intGlArrayVar = new int[2];
 		intGlArrayVar[0] = intConst2;
 		intGlArrayVar[1] = intGlVar1 + intConst2;
+		intGlVar1 = intGlArrayVar[0] += 5; 
 		
 		print(intGlArrayVar[0]);
 		print(intGlArrayVar[1]);

@@ -58,9 +58,9 @@ nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
-nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, DesignatorSuffix;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor, Expr, FactorList, AddExpr, Term;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
 nonterminal Addop, Mulop;
@@ -295,9 +295,9 @@ Addop ::= (Minus) MINUS
 			|
 		  (Plus) PLUS
 		  |
-		  (PlusEquals) PLUS EQUALS
+		  (PlusEquals) PLUS ASSIGN
 		  |
-		  (MinusEquals) MINUS EQUALS
+		  (MinusEquals) MINUS ASSIGN
 		  ;
 		  
 Term ::= (MulTerm) Term Mulop Factor
@@ -334,15 +334,13 @@ Factor ::= (DesignatorFactor) Designator
 			|
 			(ExpressionFactor) LPARENTHESIS Expr RPARENTHESIS
 			;
-			
-Designator ::= (Designator) IDENT:ident DesignatorSuffix;
-
-DesignatorSuffix ::= (ObjectDesignatorSuffix) DesignatorSuffix COLON IDENT:ident
-					|
-					(ArrayDesignatorSuffix) DesignatorSuffix LBRACKET Expr RBRACKET
-					|
-					(NoDesignatorSuffix) /* epsilon */
-					;
+					
+Designator ::= (SimpleDesignator) IDENT:ident
+				|
+			   (ArrayDesignator) Designator LBRACKET Expr RBRACKET
+			   |
+			   (ObjectDesignator) Designator COLON IDENT:ident
+			   ;
 					
 
 Relop ::= (Equals) EQUALS

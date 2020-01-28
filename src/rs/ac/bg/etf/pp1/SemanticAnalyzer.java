@@ -1,11 +1,12 @@
 package rs.ac.bg.etf.pp1;
 
-import java.util.stream.IntStream;
-
 import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.AbstractClassDecl;
-import rs.ac.bg.etf.pp1.ast.ArrayDesignatorSuffix;
+import rs.ac.bg.etf.pp1.ast.AddExpr;
+import rs.ac.bg.etf.pp1.ast.AddExpression;
+import rs.ac.bg.etf.pp1.ast.Addop;
+import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.ArrayVar;
 import rs.ac.bg.etf.pp1.ast.BoolConstant;
 import rs.ac.bg.etf.pp1.ast.BoolFactor;
@@ -18,29 +19,43 @@ import rs.ac.bg.etf.pp1.ast.ConstantDeclarations;
 import rs.ac.bg.etf.pp1.ast.Constants;
 import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorFactor;
-import rs.ac.bg.etf.pp1.ast.DesignatorSuffix;
 import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
+import rs.ac.bg.etf.pp1.ast.DivideEquals;
+import rs.ac.bg.etf.pp1.ast.Expr;
 import rs.ac.bg.etf.pp1.ast.ExpressionFactor;
+import rs.ac.bg.etf.pp1.ast.Factor;
+import rs.ac.bg.etf.pp1.ast.FactorTerm;
 import rs.ac.bg.etf.pp1.ast.FieldDecl;
 import rs.ac.bg.etf.pp1.ast.FormalParameters;
 import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
+import rs.ac.bg.etf.pp1.ast.MinusEquals;
+import rs.ac.bg.etf.pp1.ast.ModEquals;
+import rs.ac.bg.etf.pp1.ast.MulTerm;
+import rs.ac.bg.etf.pp1.ast.Mulop;
+import rs.ac.bg.etf.pp1.ast.MultiplyEquals;
 import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
 import rs.ac.bg.etf.pp1.ast.NewObjectFactor;
 import rs.ac.bg.etf.pp1.ast.NoFormalParameters;
+import rs.ac.bg.etf.pp1.ast.NoMinusExpression;
 import rs.ac.bg.etf.pp1.ast.NonVoidType;
 import rs.ac.bg.etf.pp1.ast.NumberConstant;
 import rs.ac.bg.etf.pp1.ast.NumberFactor;
-import rs.ac.bg.etf.pp1.ast.ObjectDesignatorSuffix;
+import rs.ac.bg.etf.pp1.ast.ObjectDesignator;
 import rs.ac.bg.etf.pp1.ast.ParameterList;
+import rs.ac.bg.etf.pp1.ast.PlusEquals;
 import rs.ac.bg.etf.pp1.ast.PrimitiveVar;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.ProgramName;
 import rs.ac.bg.etf.pp1.ast.RegularVarDecl;
+import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SinglePar;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
+import rs.ac.bg.etf.pp1.ast.Term;
+import rs.ac.bg.etf.pp1.ast.TermExpression;
 import rs.ac.bg.etf.pp1.ast.Type;
+import rs.ac.bg.etf.pp1.ast.UnaryMinusExpression;
 import rs.ac.bg.etf.pp1.ast.Variable;
 import rs.ac.bg.etf.pp1.ast.Variables;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
@@ -178,82 +193,67 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(Designator designator) {
-		Obj obj = Tab.find(designator.getIdent());
+	public void visit(SimpleDesignator simpleDesignator) {
+		Obj obj = Tab.find(simpleDesignator.getIdent());
 		if (obj == Tab.noObj) {
-			report_error("Simbol " + designator.getIdent() + " nije definisan", designator);
+			report_error("Simbol " + simpleDesignator.getIdent() + " nije definisan", simpleDesignator);
+			simpleDesignator.obj = Tab.noObj;
 			return;
 		}
 		switch (obj.getKind()) {
 		case Obj.Con:
-			reportSymbol("Upotrebljena konstanta", obj, designator);
+			reportSymbol("Upotrebljena konstanta", obj, simpleDesignator);
 			break;
 		case Obj.Var:
 			if (obj.getLevel() == 0) {
-				reportSymbol("Upotrebljena globalna promenljiva", obj, designator);
+				reportSymbol("Upotrebljena globalna promenljiva", obj, simpleDesignator);
 			}
 			break;
 		default:
 			break;
 		}
-		designator.obj = obj;
-		Backpatcher b = new Backpatcher();
-		designator.traverseTopDown(b);
-		boolean newErrorDetected = b.isErrorDetected();
-		if (!errorDetected) {
-			errorDetected = newErrorDetected;
-		}
-		if (newErrorDetected) {
-			return;
-		}
-		ObjList designatorSuffixObjs = designator.getDesignatorSuffix().objlist;
-		if (designatorSuffixObjs == null) {
-			return;
-		}
-		if (designatorSuffixObjs.size() == 1) {
-			Obj elem = designatorSuffixObjs.getObjs().get(0);
-			if (elem.getKind() == Obj.Elem) {
-				return;
-			}
-		}
-
-		Obj currentObj = obj;
-		for (int i = 0; i < designatorSuffixObjs.getObjs().size(); i++) {
-			Obj o = designatorSuffixObjs.getObjs().get(i);
-			currentObj = currentObj.getType().getMembersTable().searchKey(o.getName());
-		}
-		designator.obj = currentObj;
+		simpleDesignator.obj = obj;
 	}
 
 	@Override
-	public void visit(ObjectDesignatorSuffix objectDesignatorSuffix) {
-		objectDesignatorSuffix.objlist = new ObjList();
-		ObjList designatorSuffixObjs = objectDesignatorSuffix.getDesignatorSuffix().objlist;
-		if (designatorSuffixObjs != null) {
-			objectDesignatorSuffix.objlist.add(designatorSuffixObjs);
+	public void visit(ArrayDesignator arrayDesignator) {
+		arrayDesignator.obj = Tab.noObj;
+		Designator d = arrayDesignator.getDesignator();
+		if (d.obj == Tab.noObj) {
+			return;
 		}
-		objectDesignatorSuffix.objlist
-				.add(new Obj(Obj.Fld, objectDesignatorSuffix.getIdent(), new Struct(Struct.None)));
+		if (d.obj.getType().getKind() != Struct.Array) {
+			report_error("Tip izraza kod indeksnog pristupa mora biti niz", d);
+			return;
+		}
+		Expr e = arrayDesignator.getExpr();
+		if (!e.obj.getType().equals(Tab.intType)) {
+			report_error("Indeks kod pristupanja niza mora biti tipa int", e);
+			return;
+		}
+		reportSymbol("Pristupilo se elementu niza", d.obj, d);
+		arrayDesignator.obj = new Obj(Obj.Elem, d.obj.getName(), d.obj.getType().getElemType());
 	}
 
 	@Override
-	public void visit(ArrayDesignatorSuffix arrayDesignatorSuffix) {
-		DesignatorSuffix ds = arrayDesignatorSuffix.getDesignatorSuffix();
-		arrayDesignatorSuffix.objlist = new ObjList();
-		if (ds.objlist == null) {
-			arrayDesignatorSuffix.objlist.add(new Obj(Obj.Elem, "", new Struct(Struct.None)));
-		} else {
-			IntStream.range(0, ds.objlist.size()).forEachOrdered(n -> {
-				Obj elem = ds.objlist.getObjs().get(n);
-				if (ds.objlist.size() - 1 == n) {
-					arrayDesignatorSuffix.objlist
-							.add(new Obj(elem.getKind(), elem.getName(), new Struct(Struct.Array)));
-				} else {
-					arrayDesignatorSuffix.objlist.add(elem);
-				}
-			});
-			;
+	public void visit(ObjectDesignator objectDesignator) {
+		objectDesignator.obj = Tab.noObj;
+		Designator d = objectDesignator.getDesignator();
+		if (d.obj == Tab.noObj) {
+			return;
 		}
+		Struct objectClass = d.obj.getType();
+		if (objectClass.getKind() != Struct.Class) {
+			report_error("Tip izraza mora biti klasa da bi se pristupalo njenim elementima ili metodama", d);
+			return;
+		}
+		Obj member = objectClass.getMembersTable().searchKey(objectDesignator.getIdent());
+		if (member == null) {
+			report_error("Objekat " + d.obj.getName() + " ne sadrzi polje ili metodu " + objectDesignator.getIdent(),
+					d);
+			return;
+		}
+		objectDesignator.obj = member;
 	}
 
 	@Override
@@ -463,20 +463,92 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(UnaryMinusExpression unaryMinusExpression) {
+		unaryMinusExpression.obj = unaryMinusExpression.getAddExpr().obj;
+	}
+
+	@Override
+	public void visit(NoMinusExpression noMinusExpression) {
+		noMinusExpression.obj = noMinusExpression.getAddExpr().obj;
+	}
+
+	@Override
+	public void visit(AddExpression addExpression) {
+		AddExpr addExpr = addExpression.getAddExpr();
+		if (!addExpr.obj.getType().equals(Tab.intType)) {
+			report_error("Tip izraza prilikom koriscenja ovog operatora biti int", addExpr);
+			addExpression.obj = Tab.noObj;
+			return;
+		}
+		Term t = addExpression.getTerm();
+		if (!t.obj.getType().equals(Tab.intType)) {
+			report_error("Tip izraza prilikom koriscenja ovog operatora biti int", t);
+			addExpression.obj = Tab.noObj;
+			return;
+		}
+		Addop a = addExpression.getAddop();
+		if (a instanceof PlusEquals || a instanceof MinusEquals) {
+			int kind = addExpr.obj.getKind();
+			if (kind != Obj.Var && kind != Obj.Elem && kind != Obj.Fld) {
+				report_error("Rezultat izraza se mora smestiti u promenljivu, element niza ili polje klase", addExpr);
+				addExpression.obj = Tab.noObj;
+				return;
+			}
+		}
+		addExpression.obj = addExpr.obj;
+	}
+
+	@Override
+	public void visit(TermExpression termExpression) {
+		termExpression.obj = termExpression.getTerm().obj;
+	}
+
+	@Override
+	public void visit(MulTerm mulTerm) {
+		Term t = mulTerm.getTerm();
+		if (!t.obj.getType().equals(Tab.intType)) {
+			report_error("Tip izraza prilikom koriscenja ovog operatora biti int", t);
+			mulTerm.obj = Tab.noObj;
+			return;
+		}
+		Factor f = mulTerm.getFactor();
+		if (!f.obj.getType().equals(Tab.intType)) {
+			report_error("Tip izraza prilikom koriscenja ovog operatora biti int", f);
+			mulTerm.obj = Tab.noObj;
+			return;
+		}
+		Mulop m = mulTerm.getMulop();
+		if (m instanceof MultiplyEquals || m instanceof DivideEquals || m instanceof ModEquals) {
+			int kind = t.obj.getKind();
+			if (kind != Obj.Var && kind != Obj.Elem && kind != Obj.Fld) {
+				report_error("Rezultat izraza se mora smestiti u promenljivu, element niza ili polje klase", t);
+				mulTerm.obj = Tab.noObj;
+				return;
+			}
+		}
+		mulTerm.obj = t.obj;
+	}
+
+	@Override
+	public void visit(FactorTerm factorTerm) {
+		factorTerm.obj = factorTerm.getFactor().obj;
+	}
+
+	@Override
 	public void visit(DesignatorWithActParsFactor designatorWithActParsFactor) {
 		Obj o = designatorWithActParsFactor.getDesignator().obj;
 		if (o.getKind() != Obj.Meth) {
 			report_error("Simbol " + o.getName() + " ne predstavlja metodu klase ili funkciju",
 					designatorWithActParsFactor.getDesignator());
-			designatorWithActParsFactor.struct = Tab.noType;
+			designatorWithActParsFactor.obj = Tab.noObj;
 			return;
 		}
-		designatorWithActParsFactor.struct = o.getType();
+		designatorWithActParsFactor.obj = o;
 	}
 
 	@Override
 	public void visit(DesignatorFactor designatorFactor) {
-		designatorFactor.struct = designatorFactor.getDesignator().obj.getType();
+		designatorFactor.obj = designatorFactor.getDesignator().obj;
 	}
 
 	@Override
@@ -487,25 +559,25 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	@Override
 	public void visit(BoolFactor boolFactor) {
-		boolFactor.struct = Tab.boolType;
+		boolFactor.obj = new Obj(Obj.Con, "", Tab.boolType);
 	}
 
 	@Override
 	public void visit(CharacterFactor characterFactor) {
-		characterFactor.struct = Tab.charType;
+		characterFactor.obj = new Obj(Obj.Con, "", Tab.charType);
 	}
 
 	@Override
 	public void visit(NumberFactor numberFactor) {
-		numberFactor.struct = Tab.charType;
+		numberFactor.obj = new Obj(Obj.Con, "", Tab.intType);
 	}
 
 	@Override
 	public void visit(NewArrayFactor newArrayFactor) {
-		if (!newArrayFactor.getExpr().struct.equals(Tab.intType)) {
+		if (!newArrayFactor.getExpr().obj.getType().equals(Tab.intType)) {
 			report_error("Tip izraza za velicinu alociranog niza mora biti int", newArrayFactor.getExpr());
 		}
-		newArrayFactor.struct = newArrayFactor.getType().struct;
+		newArrayFactor.obj = Tab.noObj;
 	}
 
 	@Override
@@ -514,15 +586,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		if (typeStruct.getKind() != Struct.Class) {
 			report_error("Tip izraza za alokaciju objekta mora biti korisnicki definisana klasa",
 					newObjectFactor.getType());
-			newObjectFactor.struct = Tab.noType;
-		} else {
-			newObjectFactor.struct = typeStruct;
+
 		}
+		newObjectFactor.obj = Tab.noObj;
 	}
 
 	@Override
 	public void visit(ExpressionFactor expressionFactor) {
-		expressionFactor.struct = expressionFactor.getExpr().struct;
+		expressionFactor.obj = expressionFactor.getExpr().obj;
 	}
 
 	public boolean isMainDetected() {

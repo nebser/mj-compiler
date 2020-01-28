@@ -5,13 +5,15 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class DecrementDesignator extends DesignatorStatement {
+public class ObjectDesignator extends Designator {
 
     private Designator Designator;
+    private String ident;
 
-    public DecrementDesignator (Designator Designator) {
+    public ObjectDesignator (Designator Designator, String ident) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
+        this.ident=ident;
     }
 
     public Designator getDesignator() {
@@ -20,6 +22,14 @@ public class DecrementDesignator extends DesignatorStatement {
 
     public void setDesignator(Designator Designator) {
         this.Designator=Designator;
+    }
+
+    public String getIdent() {
+        return ident;
+    }
+
+    public void setIdent(String ident) {
+        this.ident=ident;
     }
 
     public void accept(Visitor visitor) {
@@ -43,7 +53,7 @@ public class DecrementDesignator extends DesignatorStatement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("DecrementDesignator(\n");
+        buffer.append("ObjectDesignator(\n");
 
         if(Designator!=null)
             buffer.append(Designator.toString("  "+tab));
@@ -51,8 +61,11 @@ public class DecrementDesignator extends DesignatorStatement {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
+        buffer.append(" "+tab+ident);
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [DecrementDesignator]");
+        buffer.append(") [ObjectDesignator]");
         return buffer.toString();
     }
 }

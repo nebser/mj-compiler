@@ -1,13 +1,24 @@
 // generated with ast extension for cup
 // version 0.8
-// 27/0/2020 1:29:9
+// 28/0/2020 2:16:42
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoDesignatorSuffix extends DesignatorSuffix {
+public class SimpleDesignator extends Designator {
 
-    public NoDesignatorSuffix () {
+    private String ident;
+
+    public SimpleDesignator (String ident) {
+        this.ident=ident;
+    }
+
+    public String getIdent() {
+        return ident;
+    }
+
+    public void setIdent(String ident) {
+        this.ident=ident;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +39,13 @@ public class NoDesignatorSuffix extends DesignatorSuffix {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoDesignatorSuffix(\n");
+        buffer.append("SimpleDesignator(\n");
+
+        buffer.append(" "+tab+ident);
+        buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [NoDesignatorSuffix]");
+        buffer.append(") [SimpleDesignator]");
         return buffer.toString();
     }
 }
