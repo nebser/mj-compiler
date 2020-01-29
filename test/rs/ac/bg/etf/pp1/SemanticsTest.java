@@ -42,7 +42,12 @@ public class SemanticsTest {
 
 			Tab.dump();
 
-			if (sa.isErrorDetected()) {
+			boolean mainDetected = sa.isMainDetected();
+			if (!mainDetected) {
+				log.info("Main funkcija nije definisana");
+			}
+
+			if (sa.isErrorDetected() || !mainDetected) {
 				log.info("Program nije semanticki ispravan");
 			} else {
 				log.info("Program je semanticki ispravan");

@@ -1,0 +1,34 @@
+// Semantics error
+
+program semantics
+
+const int intConst1 = 4, intConst2 = 'a';
+const bool trueBoolConst= true, invalidBool = 7, falseBoolConst = false;
+const char charConst = 'A';
+int intGlVar1, intGlArrayVar[];
+
+int intGlInvalidArrayVar[];
+char charGlVar;
+
+{
+	void main()
+	{
+		intGlVar1 = intConst1;
+		print(intConst1);
+		
+		intGlArrayVar = new int[2];
+		intGlArrayVar[0] = intConst2;
+		intGlArrayVar[1] = intGlVar1 + intConst2;
+		intGlVar1 = intGlArrayVar[0] += 5;
+		
+		intGlInvalidArrayVar = new int['g'];
+		intGlInvalidArrayVar = new int[true];
+		intGlInvalidArrayVar = new int[charConst];
+		intGlInvalidArrayVar = new int[intGlVar1];
+		
+		print(intGlArrayVar[0]);
+		print(intGlArrayVar[1]);
+		print(intGlVar1[4]);
+	}
+	
+}

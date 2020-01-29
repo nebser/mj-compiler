@@ -40,6 +40,27 @@ public class Compiler {
 			prog.traverseBottomUp(sa);
 
 			Tab.dump();
+			boolean mainDetected = sa.isMainDetected();
+			if (!mainDetected) {
+				log.info("Main funkcija nije definisana");
+			}
+
+			if (sa.isErrorDetected() || !mainDetected) {
+				log.info("Program nije semanticki ispravan");
+				return;
+			}
+
+			String objFileName = args[1];
+			File objFile = new File(objFileName);
+			if (objFile.exists()) {
+				objFile.delete();
+			}
+
+			CodeGenerator cg = new CodeGenerator();
+			prog.traverseBottomUp(cg);
+
+			log.info("Kompilacija je uspesno zavrsena");
+
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
