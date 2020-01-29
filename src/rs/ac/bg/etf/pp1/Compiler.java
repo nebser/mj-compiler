@@ -24,40 +24,57 @@ public class Compiler {
 		String fileName = args[0];
 		File sourceCode = new File(fileName);
 		log.info("Kompilacija fajla: " + sourceCode.getAbsolutePath());
+
 		try (Reader br = new BufferedReader(new FileReader(sourceCode))) {
 			Tab.init();
 			Yylex lexer = new Yylex(br);
 
 			MJParser p = new MJParser(lexer);
-			Symbol s = p.parse(); // pocetak parsiranja
+			Symbol s = p.parse();
 
 			Program prog = (Program) (s.value);
-			// ispis sintaksnog stabla
-			log.info(prog.toString(""));
-			log.info("===================================");
 
-			SemanticAnalyzer sa = new SemanticAnalyzer();
-			prog.traverseBottomUp(sa);
-
-			Tab.dump();
-			boolean mainDetected = sa.isMainDetected();
-			if (!mainDetected) {
-				log.info("Main funkcija nije definisana");
-			}
-
-			if (sa.isErrorDetected() || !mainDetected) {
-				log.info("Program nije semanticki ispravan");
+			// print syntax tree content
+			Counter cnt = new Counter();
+			prog.traverseTopDown(cnt);
+			log.info("===============SINTAKSNA ANALIZA====================");
+			log.info("\n" + cnt.toString());
+			if (p.isErrorDetected()) {
+				log.error("Program je sintaksno neispravan");
 				return;
 			}
 
+			// semantics analysis
+			log.info("==============SEMANTICKA ANALIZA====================");
+			SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
+			prog.traverseBottomUp(semanticAnalyzer);
+
+			// symbol table dump
+			log.info("============SADRZAJ TABELE SIMBOLA==================");
+			log.info("\n" + Tab.getContent());
+			boolean mainDetected = semanticAnalyzer.isMainDetected();
+			if (!mainDetected) {
+				log.error("Main funkcija nije definisana");
+			}
+
+			if (semanticAnalyzer.isErrorDetected() || !mainDetected) {
+				log.error("Program nije semanticki ispravan");
+				return;
+			}
+
+			// code generation
+			if (args.length < 2) {
+				log.error("Ime izlaznog objektnog fajla nije specificirano");
+				return;
+			}
 			String objFileName = args[1];
 			File objFile = new File(objFileName);
 			if (objFile.exists()) {
 				objFile.delete();
 			}
 
-			CodeGenerator cg = new CodeGenerator();
-			prog.traverseBottomUp(cg);
+			CodeGenerator codeGenerator = new CodeGenerator();
+			prog.traverseBottomUp(codeGenerator);
 
 			log.info("Kompilacija je uspesno zavrsena");
 

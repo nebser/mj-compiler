@@ -1,7 +1,9 @@
 package rs.ac.bg.etf.pp1.util;
 
 import rs.etf.pp1.symboltable.concepts.Obj;
+import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
+import rs.etf.pp1.symboltable.visitors.DumpSymbolTableVisitor;
 
 public class Tab extends rs.etf.pp1.symboltable.Tab {
 	public static final Struct boolType = new Struct(Struct.Bool);
@@ -22,5 +24,13 @@ public class Tab extends rs.etf.pp1.symboltable.Tab {
 		created.setAdr(addr);
 		created.setLevel(level);
 		return created;
+	}
+
+	public static String getContent() {
+		DumpSymbolTableVisitor stv = new DumpSymbolTableVisitor();
+		for (Scope s = currentScope; s != null; s = s.getOuter()) {
+			s.accept(stv);
+		}
+		return stv.getOutput();
 	}
 }
