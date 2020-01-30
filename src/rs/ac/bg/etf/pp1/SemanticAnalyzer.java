@@ -503,7 +503,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				return;
 			}
 		}
-		addExpression.obj = addExpr.obj;
+		addExpression.obj = new Obj(Obj.NO_VALUE, "", addExpr.obj.getType());
 	}
 
 	@Override
@@ -534,7 +534,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				return;
 			}
 		}
-		mulTerm.obj = t.obj;
+		mulTerm.obj = new Obj(Obj.NO_VALUE, "", t.obj.getType());
 	}
 
 	@Override
@@ -567,17 +567,17 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	@Override
 	public void visit(BoolFactor boolFactor) {
-		boolFactor.obj = new Obj(Obj.Con, "", Tab.boolType);
+		boolFactor.obj = new Obj(Obj.Con, "", Tab.boolType, boolFactor.getValue().equals("true") ? 1 : 0, 0);
 	}
 
 	@Override
 	public void visit(CharacterFactor characterFactor) {
-		characterFactor.obj = new Obj(Obj.Con, "", Tab.charType);
+		characterFactor.obj = new Obj(Obj.Con, "", Tab.charType, characterFactor.getValue().charAt(1), 0);
 	}
 
 	@Override
 	public void visit(NumberFactor numberFactor) {
-		numberFactor.obj = new Obj(Obj.Con, "", Tab.intType);
+		numberFactor.obj = new Obj(Obj.Con, "", Tab.intType, numberFactor.getValue(), 0);
 	}
 
 	@Override
@@ -664,23 +664,28 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				reportError("Desna strana se ne moze dodeliti levoj", assignDesignator.getExpr());
 			}
 		}
+		assignDesignator.obj = designatorObj;
 	}
 
 	@Override
 	public void visit(FunctionCall functionCall) {
 		Designator d = functionCall.getDesignator();
+		functionCall.obj = Tab.noObj;
 		if (d.obj.equals(Tab.noObj)) {
 			return;
 		}
 		if (d.obj.getKind() != Obj.Meth) {
 			reportError("Simbol " + d.obj.getName()
 					+ " ne predstavlja funkciju pa se ne moze koristiti u izrazu za poziv funkcije", d);
+			return;
 		}
+		functionCall.obj = d.obj;
 	}
 
 	@Override
 	public void visit(DecrementDesignator decrementDesignator) {
 		Designator d = decrementDesignator.getDesignator();
+		decrementDesignator.obj = Tab.noObj;
 		if (d.obj.equals(Tab.noObj)) {
 			return;
 		}
@@ -692,12 +697,15 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		}
 		if (!d.obj.getType().equals(Tab.intType)) {
 			reportError("Tip operanda decrement naredbe mora biti int", d);
+			return;
 		}
+		decrementDesignator.obj = d.obj;
 	}
 
 	@Override
 	public void visit(IncrementDesignator incrementDesignator) {
 		Designator d = incrementDesignator.getDesignator();
+		incrementDesignator.obj = Tab.noObj;
 		if (d.obj.equals(Tab.noObj)) {
 			return;
 		}
@@ -709,7 +717,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		}
 		if (!d.obj.getType().equals(Tab.intType)) {
 			reportError("Tip operanda increment naredbe mora biti int", d);
+			return;
 		}
+		incrementDesignator.obj = d.obj;
 	}
 
 	public boolean isMainDetected() {

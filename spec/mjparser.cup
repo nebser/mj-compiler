@@ -56,14 +56,14 @@ nonterminal VarDecl, AbstractClassDecl, ClassDecl;
 nonterminal VarDeclSection, VarDeclList, GlobalVarDecl;
 nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
-nonterminal DesignatorStatement, Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
+nonterminal Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
 nonterminal ReturnExpr, Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
 nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
@@ -317,9 +317,9 @@ Mulop ::= (Multiply) MULTIPLY
 		  	|
 		  (Mod) MOD
 		  |
-		  (MultiplyEquals) MULTIPLY EQUALS
+		  (MultiplyEquals) MULTIPLY ASSIGN
 		  |
-		  (DivideEquals) DIVIDE EQUALS
+		  (DivideEquals) DIVIDE ASSIGN
 		  |
 		  (ModEquals) MOD EQUALS
 		  ;
@@ -328,11 +328,11 @@ Factor ::= (DesignatorFactor) Designator
 			|
 			(DesignatorWithActParsFactor) Designator LPARENTHESIS ActPars RPARENTHESIS
 			|
-			(NumberFactor) NUMBER
+			(NumberFactor) NUMBER:value
 			|
-			(CharacterFactor) CHARACTER
+			(CharacterFactor) CHARACTER:value
 			|
-			(BoolFactor) BOOL
+			(BoolFactor) BOOL:value
 			|
 			(NewArrayFactor) NEW Type LBRACKET Expr RBRACKET
 			|
