@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 30/0/2020 2:20:37
+// 31/0/2020 20:3:28
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,6 +9,8 @@ public class GlobalVarDecl implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
+    public rs.ac.bg.etf.pp1.util.ObjList objlist = null;
+
     private Type Type;
     private VarList VarList;
 

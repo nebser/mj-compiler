@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 30/0/2020 2:20:38
+// 31/0/2020 20:3:28
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -33,6 +33,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Term Term) { }
     public void visit(FormParsList FormParsList) { }
     public void visit(Condition Condition) { }
+    public void visit(GlobalMethodDeclList GlobalMethodDeclList) { }
     public void visit(DeclSection DeclSection) { }
     public void visit(ExprList ExprList) { }
     public void visit(ExtendsStmt ExtendsStmt) { }
@@ -46,8 +47,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(OptionalDesignatorStatement OptionalDesignatorStatement) { }
     public void visit(Statement Statement) { }
     public void visit(DeclElem DeclElem) { }
-    public void visit(VarDecl VarDecl) { }
     public void visit(ReturnExpr ReturnExpr) { }
+    public void visit(VarDecl VarDecl) { }
     public void visit(AnyMethodDeclList AnyMethodDeclList) { }
     public void visit(MethodDeclSection MethodDeclSection) { }
     public void visit(CondFact CondFact) { }
@@ -152,6 +153,10 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ExtendsStatement ExtendsStatement) { visit(); }
     public void visit(ClassName ClassName) { visit(); }
     public void visit(ClassDecl ClassDecl) { visit(); }
+    public void visit(GlobalMethodHeader GlobalMethodHeader) { visit(); }
+    public void visit(GlobalMethodDecl GlobalMethodDecl) { visit(); }
+    public void visit(GlobalMethodDeclaration GlobalMethodDeclaration) { visit(); }
+    public void visit(GlobalMethodDeclarations GlobalMethodDeclarations) { visit(); }
     public void visit(MethodDeclaration MethodDeclaration) { visit(); }
     public void visit(MethodDeclarations MethodDeclarations) { visit(); }
     public void visit(NoMethodDeclarationSection NoMethodDeclarationSection) { visit(); }

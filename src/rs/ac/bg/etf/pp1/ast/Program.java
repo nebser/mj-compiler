@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 30/0/2020 2:20:37
+// 31/0/2020 20:3:28
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -13,15 +13,15 @@ public class Program implements SyntaxNode {
 
     private ProgramName ProgramName;
     private DeclSection DeclSection;
-    private MethodDeclList MethodDeclList;
+    private GlobalMethodDeclList GlobalMethodDeclList;
 
-    public Program (ProgramName ProgramName, DeclSection DeclSection, MethodDeclList MethodDeclList) {
+    public Program (ProgramName ProgramName, DeclSection DeclSection, GlobalMethodDeclList GlobalMethodDeclList) {
         this.ProgramName=ProgramName;
         if(ProgramName!=null) ProgramName.setParent(this);
         this.DeclSection=DeclSection;
         if(DeclSection!=null) DeclSection.setParent(this);
-        this.MethodDeclList=MethodDeclList;
-        if(MethodDeclList!=null) MethodDeclList.setParent(this);
+        this.GlobalMethodDeclList=GlobalMethodDeclList;
+        if(GlobalMethodDeclList!=null) GlobalMethodDeclList.setParent(this);
     }
 
     public ProgramName getProgramName() {
@@ -40,12 +40,12 @@ public class Program implements SyntaxNode {
         this.DeclSection=DeclSection;
     }
 
-    public MethodDeclList getMethodDeclList() {
-        return MethodDeclList;
+    public GlobalMethodDeclList getGlobalMethodDeclList() {
+        return GlobalMethodDeclList;
     }
 
-    public void setMethodDeclList(MethodDeclList MethodDeclList) {
-        this.MethodDeclList=MethodDeclList;
+    public void setGlobalMethodDeclList(GlobalMethodDeclList GlobalMethodDeclList) {
+        this.GlobalMethodDeclList=GlobalMethodDeclList;
     }
 
     public SyntaxNode getParent() {
@@ -71,20 +71,20 @@ public class Program implements SyntaxNode {
     public void childrenAccept(Visitor visitor) {
         if(ProgramName!=null) ProgramName.accept(visitor);
         if(DeclSection!=null) DeclSection.accept(visitor);
-        if(MethodDeclList!=null) MethodDeclList.accept(visitor);
+        if(GlobalMethodDeclList!=null) GlobalMethodDeclList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ProgramName!=null) ProgramName.traverseTopDown(visitor);
         if(DeclSection!=null) DeclSection.traverseTopDown(visitor);
-        if(MethodDeclList!=null) MethodDeclList.traverseTopDown(visitor);
+        if(GlobalMethodDeclList!=null) GlobalMethodDeclList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ProgramName!=null) ProgramName.traverseBottomUp(visitor);
         if(DeclSection!=null) DeclSection.traverseBottomUp(visitor);
-        if(MethodDeclList!=null) MethodDeclList.traverseBottomUp(visitor);
+        if(GlobalMethodDeclList!=null) GlobalMethodDeclList.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -105,8 +105,8 @@ public class Program implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(MethodDeclList!=null)
-            buffer.append(MethodDeclList.toString("  "+tab));
+        if(GlobalMethodDeclList!=null)
+            buffer.append(GlobalMethodDeclList.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

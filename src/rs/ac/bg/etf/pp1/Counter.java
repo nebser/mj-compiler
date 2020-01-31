@@ -9,6 +9,7 @@ import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
 import rs.ac.bg.etf.pp1.ast.FieldDecl;
 import rs.ac.bg.etf.pp1.ast.ForStmt;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
+import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
 import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
 import rs.ac.bg.etf.pp1.ast.MathedStmt;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
@@ -118,6 +119,13 @@ public class Counter extends VisitorAdaptor {
 	public void visit(MethodHeader methodHeader) {
 		methodDeclarations++;
 		currentMethod = new MethodContext(methodHeader.getIdent());
+		methods.add(currentMethod);
+	}
+
+	@Override
+	public void visit(GlobalMethodHeader globalMethodHeader) {
+		methodDeclarations++;
+		currentMethod = new MethodContext(globalMethodHeader.getIdent());
 		methods.add(currentMethod);
 	}
 

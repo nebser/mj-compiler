@@ -30,6 +30,8 @@ import rs.ac.bg.etf.pp1.ast.FactorTerm;
 import rs.ac.bg.etf.pp1.ast.FieldDecl;
 import rs.ac.bg.etf.pp1.ast.FormalParameters;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
+import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
+import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
 import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
@@ -43,6 +45,7 @@ import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
 import rs.ac.bg.etf.pp1.ast.NewObjectFactor;
 import rs.ac.bg.etf.pp1.ast.NoFormalParameters;
 import rs.ac.bg.etf.pp1.ast.NoMinusExpression;
+import rs.ac.bg.etf.pp1.ast.NoReturnExpr;
 import rs.ac.bg.etf.pp1.ast.NonVoidType;
 import rs.ac.bg.etf.pp1.ast.NumberConstant;
 import rs.ac.bg.etf.pp1.ast.NumberFactor;
@@ -56,6 +59,8 @@ import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.ProgramName;
 import rs.ac.bg.etf.pp1.ast.Read;
 import rs.ac.bg.etf.pp1.ast.RegularVarDecl;
+import rs.ac.bg.etf.pp1.ast.RetExpr;
+import rs.ac.bg.etf.pp1.ast.Return;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SinglePar;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
@@ -79,6 +84,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	private boolean errorDetected = false;
 	private boolean mainDetected = false;
+	private Obj currentMethod = Tab.noObj;
 
 	Logger log = Logger.getLogger(getClass());
 
@@ -295,6 +301,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			reportError("Tip " + typeName + " nije definisan", globalVarDecl);
 			return;
 		}
+		globalVarDecl.objlist = new ObjList();
 		globalVarDecl.getVarList().varlist.getVars().forEach(v -> {
 			String varName = v.getName();
 			if (Tab.currentScope.findSymbol(varName) != null) {
@@ -302,10 +309,12 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				return;
 			}
 			if (v.isArray()) {
-				Tab.insert(Obj.Var, varName, new Struct(Struct.Array, typeObj.getType()));
+				Obj obj = Tab.insert(Obj.Var, varName, new Struct(Struct.Array, typeObj.getType()));
+				globalVarDecl.objlist.add(obj);
 
 			} else {
-				Tab.insert(Obj.Var, varName, typeObj.getType());
+				Obj obj = Tab.insert(Obj.Var, varName, typeObj.getType());
+				globalVarDecl.objlist.add(obj);
 			}
 		});
 	}
@@ -445,25 +454,75 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(MethodHeader methodHeader) {
 		String methodName = methodHeader.getIdent();
 		Obj typeObj = Tab.find(methodName);
-		if (typeObj.equals(Tab.noObj) && typeObj.getKind() == Obj.Meth) {
+		if (!typeObj.equals(Tab.noObj) && typeObj.getKind() == Obj.Meth) {
 			reportError("Metoda " + methodName + " je vec definisan", methodHeader);
 		}
 		ObjList formPars = methodHeader.getFormPars().objlist;
 
 		if (methodName.equals("main")) {
-			if (Tab.currentScope.getOuter().getOuter() != null) {
-				reportError("Main metoda moze da bude deklarisana samo na globalnom nivou", methodHeader);
-			}
+			reportError("Main metoda moze da bude deklarisana samo na globalnom nivou", methodHeader);
+		}
+
+		methodHeader.obj = Tab.insert(Obj.Meth, methodName, methodHeader.getReturnType().struct, 0, formPars.size());
+		currentMethod = methodHeader.obj;
+		Tab.openScope();
+		formPars.getObjs().forEach(p -> {
+			Tab.insert(Obj.Var, p.getName(), p.getType());
+		});
+	}
+
+	@Override
+	public void visit(RetExpr returnExpression) {
+		returnExpression.struct = returnExpression.getExpr().obj.getType();
+	}
+
+	@Override
+	public void visit(NoReturnExpr noReturnExpression) {
+		noReturnExpression.struct = Tab.noType;
+	}
+
+	@Override
+	public void visit(Return return_) {
+		if (currentMethod.equals(Tab.noObj)) {
+			reportError("Return iskaz moze biti upotrebljen iskljucivo u telu metode", return_.getReturnExpr());
+			return;
+		}
+		Struct expectedType = currentMethod.getType();
+		Struct returnType = return_.getReturnExpr().struct;
+		if (expectedType.equals(Tab.noType) && !returnType.equals(Tab.noType)) {
+			reportError("Return iskaz metode " + currentMethod.getName()
+					+ " ne sme imati izraz posto je metoda deklarisana da vraca void", return_.getReturnExpr());
+			return;
+		}
+		if (!expectedType.equals(returnType)) {
+			reportError(
+					"Ne podudara se tip return izraza sa tipom povratne vrednosti metode " + currentMethod.getName(),
+					return_.getReturnExpr());
+		}
+	}
+
+	@Override
+	public void visit(GlobalMethodHeader globalMethodHeader) {
+		String methodName = globalMethodHeader.getIdent();
+		Obj typeObj = Tab.find(methodName);
+		if (!typeObj.equals(Tab.noObj) && typeObj.getKind() == Obj.Meth) {
+			reportError("Metoda " + methodName + " je vec definisan", globalMethodHeader);
+		}
+		ObjList formPars = globalMethodHeader.getFormPars().objlist;
+
+		if (methodName.equals("main")) {
 			if (formPars.size() != 0) {
-				reportError("Main metoda ne sme da ima argumente", methodHeader);
+				reportError("Main metoda ne sme da ima argumente", globalMethodHeader);
 			}
-			if (!methodHeader.getReturnType().struct.equals(Tab.noType)) {
-				reportError("Main metoda ne sme da ima povratni tip", methodHeader);
+			if (!globalMethodHeader.getReturnType().struct.equals(Tab.noType)) {
+				reportError("Main metoda ne sme da ima povratni tip", globalMethodHeader);
 			}
 			mainDetected = true;
 		}
 
-		methodHeader.obj = Tab.insert(Obj.Meth, methodName, methodHeader.getReturnType().struct, 0, formPars.size());
+		globalMethodHeader.obj = Tab.insert(Obj.Meth, methodName, globalMethodHeader.getReturnType().struct, 0,
+				formPars.size());
+		currentMethod = globalMethodHeader.obj;
 		Tab.openScope();
 		formPars.getObjs().forEach(p -> {
 			Tab.insert(Obj.Var, p.getName(), p.getType());
@@ -563,6 +622,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(MethodDecl methodDecl) {
 		Tab.chainLocalSymbols(methodDecl.getMethodHeader().obj);
 		Tab.closeScope();
+		currentMethod = Tab.noObj;
+	}
+
+	@Override
+	public void visit(GlobalMethodDecl globalMethodDecl) {
+		Tab.chainLocalSymbols(globalMethodDecl.getGlobalMethodHeader().obj);
+		Tab.closeScope();
+		currentMethod = Tab.noObj;
 	}
 
 	@Override

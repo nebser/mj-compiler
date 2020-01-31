@@ -1,38 +1,56 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.Collection;
+
+import org.apache.log4j.Logger;
+
 import rs.ac.bg.etf.pp1.ast.AddExpression;
 import rs.ac.bg.etf.pp1.ast.Addop;
 import rs.ac.bg.etf.pp1.ast.AssignDesignator;
 import rs.ac.bg.etf.pp1.ast.DecrementDesignator;
-import rs.ac.bg.etf.pp1.ast.Divide;
-import rs.ac.bg.etf.pp1.ast.DivideEquals;
+import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
 import rs.ac.bg.etf.pp1.ast.FactorTerm;
+import rs.ac.bg.etf.pp1.ast.FunctionCall;
+import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
+import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
+import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
-import rs.ac.bg.etf.pp1.ast.Minus;
-import rs.ac.bg.etf.pp1.ast.MinusEquals;
-import rs.ac.bg.etf.pp1.ast.Mod;
-import rs.ac.bg.etf.pp1.ast.ModEquals;
 import rs.ac.bg.etf.pp1.ast.MulTerm;
 import rs.ac.bg.etf.pp1.ast.Mulop;
-import rs.ac.bg.etf.pp1.ast.Multiply;
-import rs.ac.bg.etf.pp1.ast.MultiplyEquals;
-import rs.ac.bg.etf.pp1.ast.Plus;
-import rs.ac.bg.etf.pp1.ast.PlusEquals;
+import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
+import rs.ac.bg.etf.pp1.ast.Print;
+import rs.ac.bg.etf.pp1.ast.PrintWithNumber;
 import rs.ac.bg.etf.pp1.ast.Read;
+import rs.ac.bg.etf.pp1.ast.Return;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
+import rs.ac.bg.etf.pp1.ast.UnaryMinusExpression;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
+import rs.ac.bg.etf.pp1.util.Tab;
 import rs.etf.pp1.mj.runtime.Code;
-import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
+
+	private final int WORD_SIZE = 4;
+
+	Logger log = Logger.getLogger(getClass());
+
+	@Override
+	public void visit(GlobalVarDecl globalVarDecl) {
+		globalVarDecl.objlist.getObjs().forEach(obj -> {
+			obj.setAdr(Code.dataSize);
+			log.info("Setuje se data entry:" + obj.getName() + " " + obj.getKind() + " " + obj.getAdr());
+			Code.dataSize += WORD_SIZE;
+		});
+	}
 
 	@Override
 	public void visit(SimpleDesignator simpleDesignator) {
 		if (simpleDesignator.obj.getType().getKind() == Struct.Array) {
 			Code.load(simpleDesignator.obj);
 		}
+
 	}
 
 	@Override
@@ -51,55 +69,13 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(MulTerm mulTerm) {
 		Code.load(mulTerm.getFactor().obj);
 		Mulop operator = mulTerm.getMulop();
-		if (operator instanceof Multiply) {
-			Code.put(Code.mul);
-			return;
-		}
-		if (operator instanceof Divide) {
-			Code.put(Code.div);
-			return;
-		}
-		if (operator instanceof Mod) {
-			Code.put(Code.rem);
-			return;
-		}
-		if (operator instanceof MultiplyEquals) {
-			Code.put(Code.mul);
-			Code.store(mulTerm.obj);
-			return;
-		}
-		if (operator instanceof DivideEquals) {
-			Code.put(Code.div);
-			Code.store(mulTerm.obj);
-			return;
-		}
-		if (operator instanceof ModEquals) {
-			Code.put(Code.rem);
-			Code.store(mulTerm.obj);
-			return;
-		}
+		operator.accept(new OperationCodeGenerator(mulTerm));
 	}
 
 	@Override
 	public void visit(AddExpression addExpression) {
 		Addop operator = addExpression.getAddop();
-		if (operator instanceof Minus) {
-			Code.put(Code.sub);
-			return;
-		}
-		if (operator instanceof Plus) {
-			Code.put(Code.add);
-			return;
-		}
-		if (operator instanceof MinusEquals) {
-			Code.put(Code.sub);
-			Code.store(addExpression.obj);
-		}
-		if (operator instanceof PlusEquals) {
-			Code.put(Code.add);
-			Code.store(addExpression.obj);
-			return;
-		}
+		operator.accept(new OperationCodeGenerator(addExpression));
 	}
 
 	@Override
@@ -160,9 +136,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(Read read) {
 		Obj obj = read.getDesignator().obj;
-		if (obj.getKind() == Obj.Var) {
-			Code.put(obj.getAdr());
-		}
 		if (obj.getType().equals(Tab.intType)) {
 			Code.put(Code.read);
 		} else {
@@ -170,4 +143,156 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		Code.store(obj);
 	}
+
+	private void printBool(int width) {
+		Code.loadConst(1);
+		int offsetAddress = Code.pc + 1;
+		Code.putFalseJump(Code.ne, 0);
+
+		Code.loadConst('f');
+		Code.loadConst(width);
+		Code.put(Code.bprint);
+
+		Code.loadConst('a');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		Code.loadConst('l');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		Code.loadConst('s');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		Code.loadConst('e');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		int jumpOffset = Code.pc + 1;
+
+		Code.putJump(0);
+
+		Code.fixup(offsetAddress);
+
+		Code.loadConst('t');
+		Code.loadConst(width);
+		Code.put(Code.bprint);
+
+		Code.loadConst('r');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		Code.loadConst('u');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		Code.loadConst('e');
+		Code.loadConst(1);
+		Code.put(Code.bprint);
+
+		Code.fixup(jumpOffset);
+	}
+
+	private void printInt(int width) {
+		Code.loadConst(width);
+		Code.put(Code.print);
+	}
+
+	private void printChar(int width) {
+		Code.loadConst(width);
+		Code.put(Code.bprint);
+	}
+
+	@Override
+	public void visit(Print print) {
+		Struct type = print.getExpr().obj.getType();
+		if (type.equals(Tab.intType)) {
+			printInt(1);
+		} else if (type.equals(Tab.boolType)) {
+			printBool(1);
+
+		} else if (type.equals(Tab.charType)) {
+			printChar(1);
+		}
+	}
+
+	@Override
+	public void visit(PrintWithNumber printWithNumber) {
+		Struct type = printWithNumber.getExpr().obj.getType();
+		if (type.equals(Tab.intType)) {
+			printInt(printWithNumber.getWidth());
+		} else if (type.equals(Tab.boolType)) {
+			printBool(printWithNumber.getWidth());
+
+		} else if (type.equals(Tab.charType)) {
+			printChar(printWithNumber.getWidth());
+		}
+	}
+
+	@Override
+	public void visit(NewArrayFactor newArrayFactor) {
+		Code.put(Code.newarray);
+		if (newArrayFactor.getType().struct.equals(Tab.intType)) {
+			Code.put(1);
+		} else {
+			Code.put(0);
+		}
+	}
+
+	@Override
+	public void visit(UnaryMinusExpression unaryMinusExpression) {
+		Code.put(Code.neg);
+	}
+
+	@Override
+	public void visit(DesignatorWithActParsFactor designatorWithActualPars) {
+		int addr = designatorWithActualPars.getDesignator().obj.getAdr() - Code.pc;
+
+		Code.put(Code.call);
+		Code.put2(addr);
+	}
+
+	@Override
+	public void visit(FunctionCall functionCall) {
+		int addr = functionCall.getDesignator().obj.getAdr() - Code.pc;
+
+		Code.put(Code.call);
+		Code.put2(addr);
+	}
+
+	@Override
+	public void visit(GlobalMethodHeader globalMethodHeader) {
+		globalMethodHeader.obj.setAdr(Code.pc);
+		if (globalMethodHeader.obj.getName().equals("main")) {
+			Code.mainPc = Code.pc;
+		}
+		Collection<Obj> locals = globalMethodHeader.obj.getLocalSymbols();
+
+		int addr = 0;
+		for (Obj current : locals) {
+			current.setAdr(addr);
+			addr += WORD_SIZE;
+		}
+
+		Code.put(Code.enter);
+		Code.put(globalMethodHeader.obj.getLevel());
+		Code.put(locals.size());
+	}
+
+	@Override
+	public void visit(GlobalMethodDecl globalMethodDecl) {
+		// check if return is not the last
+		if (Code.buf[Code.pc - 1] != (byte) Code.return_) {
+			Code.put(Code.exit);
+			Code.put(Code.return_);
+		}
+	}
+
+	@Override
+	public void visit(Return return_) {
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
+
 }

@@ -2,6 +2,7 @@ package rs.ac.bg.etf.pp1;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.Reader;
 
@@ -12,6 +13,7 @@ import java_cup.runtime.Symbol;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
 import rs.ac.bg.etf.pp1.util.Tab;
+import rs.etf.pp1.mj.runtime.Code;
 
 public class Compiler {
 	static {
@@ -75,6 +77,11 @@ public class Compiler {
 
 			CodeGenerator codeGenerator = new CodeGenerator();
 			prog.traverseBottomUp(codeGenerator);
+
+			FileOutputStream output = new FileOutputStream(objFile);
+			log.info("PC je " + Code.pc);
+			log.info("Main PC je " + Code.mainPc);
+			Code.write(output);
 
 			log.info("Kompilacija je uspesno zavrsena");
 

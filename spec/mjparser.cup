@@ -53,25 +53,26 @@ terminal EQUALS, DIFFERS, GREATER, GREATER_OR_EQUAL, LESS, LESS_OR_EQUAL;
 
 nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
 nonterminal VarDecl, AbstractClassDecl, ClassDecl;
-nonterminal VarDeclSection, VarDeclList, GlobalVarDecl;
+nonterminal VarDeclSection, VarDeclList;
 nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
-nonterminal ReturnExpr, Assignop, ActPars, ExprList, Relop;
+nonterminal Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
 nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
+nonterminal GlobalMethodDeclList, GlobalMethodDecl;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader, GlobalMethodHeader;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
-nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, GlobalVarDecl;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
 nonterminal Addop, Mulop;
 
-Program ::= (Program) PROGRAM ProgramName:p DeclSection LBRACE MethodDeclList RBRACE;
+Program ::= (Program) PROGRAM ProgramName:p DeclSection LBRACE GlobalMethodDeclList RBRACE;
 
 ProgramName ::= (ProgramName) IDENT:progName;
 
@@ -133,6 +134,15 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 					|
 					(MethodDeclaration) MethodDecl
 					;
+					
+GlobalMethodDeclList ::= (GlobalMethodDeclarations) GlobalMethodDeclList GlobalMethodDecl
+						 |
+						 (GlobalMethodDeclaration) GlobalMethodDecl
+						 ;
+						 
+GlobalMethodDecl ::= (GlobalMethodDecl) GlobalMethodHeader VarDeclSection LBRACE StatementList RBRACE;
+
+GlobalMethodHeader ::= (GlobalMethodHeader) ReturnType IDENT:ident LPARENTHESIS FormPars RPARENTHESIS;
 					
 ClassDecl ::= (ClassDecl) CLASS ClassName ExtendsStmt LBRACE FieldDeclSection MethodDeclSection RBRACE;
 
@@ -229,7 +239,7 @@ Matched ::= (DesignatorStmt) DesignatorSentence
 			|
 			(Print) PRINT LPARENTHESIS Expr RPARENTHESIS SEMI_COLON
 			|
-			(PrintWithNumber) PRINT LPARENTHESIS Expr COMMA NUMBER RPARENTHESIS SEMI_COLON
+			(PrintWithNumber) PRINT LPARENTHESIS Expr COMMA NUMBER:width RPARENTHESIS SEMI_COLON
 			;
 			
 DesignatorSentence ::= (DesignatorSen) DesignatorStatement SEMI_COLON
