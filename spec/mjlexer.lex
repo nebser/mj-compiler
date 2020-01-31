@@ -6,6 +6,17 @@ import java_cup.runtime.Symbol;
 
 %{
 
+	private boolean errorDetected = false;
+	
+	public boolean isErrorDetected() {
+		return errorDetected;
+	}
+	
+	private void reportError(String symbol, int line, int column) {
+		errorDetected = true;
+		System.err.println("Leksicka greska (" + symbol + ") u liniji " + line + " i koloni " + column);
+	}
+
 	private Symbol new_symbol(int type) {
 		return new Symbol(type, yyline+1, yycolumn);
 	}
@@ -87,6 +98,6 @@ true|false { return new_symbol(sym.BOOL, yytext()); }
 [0-9]+ { return new_symbol(sym.NUMBER, new Integer(yytext())); }
 \'.\' { return new_symbol(sym.CHARACTER, yytext()); }
 
-. { throw new LexerException(yytext(), yyline+1, yycolumn); }
+. { reportError(yytext(), yyline+1, yycolumn); }
 
  

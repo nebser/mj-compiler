@@ -40,7 +40,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(GlobalVarDecl globalVarDecl) {
 		globalVarDecl.objlist.getObjs().forEach(obj -> {
 			obj.setAdr(Code.dataSize);
-			log.info("Setuje se data entry:" + obj.getName() + " " + obj.getKind() + " " + obj.getAdr());
 			Code.dataSize += WORD_SIZE;
 		});
 	}

@@ -3,7 +3,6 @@ package rs.ac.bg.etf.pp1.util;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
-import rs.etf.pp1.symboltable.visitors.DumpSymbolTableVisitor;
 
 public class Tab extends rs.etf.pp1.symboltable.Tab {
 	public static final Struct boolType = new Struct(Struct.Bool);

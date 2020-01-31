@@ -4,18 +4,17 @@
 	<target name="delete">
 		<delete>
 			<fileset dir="src/rs/ac/bg/etf/pp1">
-				<exclude name="sym_old.java"/>
 				<exclude name="Compiler.java"/>
 				<exclude name="Counter.java"/>
 				<exclude name="SemanticAnalyzer.java"/>
 				<exclude name="CodeGenerator.java"/>
 				<exclude name="OperationCodeGenerator.java"/>
-				<exclude name="LexerException.java"/>
 				<exclude name="util/Log4JUtils.java"/>
 				<exclude name="util/ObjList.java"/>
 				<exclude name="util/Tab.java"/>
 				<exclude name="util/Var.java"/>
 				<exclude name="util/VarList.java"/>
+				<exclude name="util/DumpSymbolTableVisitor.java"/>
 			</fileset>
 		</delete>
 	</target>

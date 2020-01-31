@@ -19,10 +19,12 @@ public class Compiler {
 	static {
 		DOMConfigurator.configure(Log4JUtils.instance().findLoggerConfigFile());
 		Log4JUtils.instance().prepareLogFile(Logger.getRootLogger());
+		log = Logger.getLogger(Compiler.class);
 	}
 
+	private static Logger log;
+
 	public static void main(String[] args) {
-		Logger log = Logger.getLogger(Compiler.class);
 		String fileName = args[0];
 		File sourceCode = new File(fileName);
 		log.info("Kompilacija fajla: " + sourceCode.getAbsolutePath());
@@ -31,18 +33,30 @@ public class Compiler {
 			Tab.init();
 			Yylex lexer = new Yylex(br);
 
+			if (lexer.isErrorDetected()) {
+				log.info("Program je leksicki neispravan");
+				return;
+			}
+
 			MJParser p = new MJParser(lexer);
 			Symbol s = p.parse();
 
 			Program prog = (Program) (s.value);
 
+			// print syntax tree
+			System.out.println("===============SINTAKSNO STABLO=====================");
+			System.out.println(prog.toString(""));
+
 			// print syntax tree content
 			Counter cnt = new Counter();
 			prog.traverseTopDown(cnt);
+			String content = cnt.toString();
 			log.info("===============SINTAKSNA ANALIZA====================");
-			log.info("\n" + cnt.toString());
+			log.info("\n" + content);
+
+			// check if program is valid
 			if (p.isErrorDetected()) {
-				log.error("Program je sintaksno neispravan");
+				log.info("Program je sintaksno neispravan");
 				return;
 			}
 
@@ -52,15 +66,15 @@ public class Compiler {
 			prog.traverseBottomUp(semanticAnalyzer);
 
 			// symbol table dump
-			log.info("============SADRZAJ TABELE SIMBOLA==================");
-			log.info("\n" + Tab.getContent());
+			tsdump();
+
 			boolean mainDetected = semanticAnalyzer.isMainDetected();
 			if (!mainDetected) {
 				log.error("Main funkcija nije definisana");
 			}
 
 			if (semanticAnalyzer.isErrorDetected() || !mainDetected) {
-				log.error("Program nije semanticki ispravan");
+				log.info("Program nije semanticki ispravan");
 				return;
 			}
 
@@ -79,8 +93,6 @@ public class Compiler {
 			prog.traverseBottomUp(codeGenerator);
 
 			FileOutputStream output = new FileOutputStream(objFile);
-			log.info("PC je " + Code.pc);
-			log.info("Main PC je " + Code.mainPc);
 			Code.write(output);
 
 			log.info("Kompilacija je uspesno zavrsena");
@@ -88,5 +100,10 @@ public class Compiler {
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
+	}
+
+	public static void tsdump() {
+		log.info("============SADRZAJ TABELE SIMBOLA==================");
+		log.info("\n" + Tab.getContent());
 	}
 }

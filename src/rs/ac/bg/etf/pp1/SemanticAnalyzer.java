@@ -72,13 +72,13 @@ import rs.ac.bg.etf.pp1.ast.Variable;
 import rs.ac.bg.etf.pp1.ast.Variables;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.ac.bg.etf.pp1.ast.VoidType;
+import rs.ac.bg.etf.pp1.util.DumpSymbolTableVisitor;
 import rs.ac.bg.etf.pp1.util.ObjList;
 import rs.ac.bg.etf.pp1.util.Tab;
 import rs.ac.bg.etf.pp1.util.Var;
 import rs.ac.bg.etf.pp1.util.VarList;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
-import rs.etf.pp1.symboltable.visitors.DumpSymbolTableVisitor;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
 
@@ -104,6 +104,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		if (line != 0)
 			msg.append(" na liniji ").append(line);
 		log.info(msg.toString());
+
 	}
 
 	private void reportSymbol(String description, Obj obj, SyntaxNode info) {
