@@ -1,0 +1,41 @@
+// Semantics error
+
+program invalidExpressions
+
+const int intConst = 4;
+const bool boolConst = false;
+const char charConst = 'A';
+
+int intGlVar, intGlArrayVar[];
+
+char charGlVar;
+
+bool boolGlVar;
+
+{
+	void main() {
+		read(intConst);
+		read(boolConst);
+		read(charConst);
+		read(intGlArrayVar);
+		
+		read(intGlVar);
+		read(charGlVar);
+		read(boolGlVar);
+		read(intGlArrayVar[0]);
+		
+		print(intGlArrayVar);
+		
+		print(intConst);
+		print(boolConst);
+		print(charConst);
+		
+		print(intGlVar);
+		print(charGlVar);
+		print(boolGlVar);
+		print(intGlArrayVar[0]);
+		
+		print(intConst + intGlVar * intGlArrayVar[0]);
+	}
+
+}

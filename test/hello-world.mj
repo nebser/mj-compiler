@@ -1,0 +1,23 @@
+// Hello world
+
+program invalidNoMain
+
+{
+	void printHelloWorld() {
+		print('H');
+		print('e');
+		print('l');
+		print('l');
+		print('o');
+		print('W', 2);
+		print('o');
+		print('r');
+		print('l');
+		print('d');
+		print(eol);
+	}
+	
+	void main() {
+		printHelloWorld();
+	}
+}

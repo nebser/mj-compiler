@@ -1,0 +1,37 @@
+// Semantics error
+
+program invalidExpressions
+
+const int intConst = 4;
+const bool boolConst = false;
+const char charConst = 'A';
+
+int intGlVar, intGlArrayVar[];
+
+char charGlVar;
+
+bool boolGlVar;
+
+{
+	void main()
+		bool boolLocal;
+		int intLocal;
+		char charLocal;
+	{
+		intGlVar = intConst + 10;
+		intGlArrayVar = new int[2+intGlVar];
+		intGlArrayVar[0] = intGlVar * 10 + intConst - 12;
+		intGlArrayVar[1] = (intConst + 20) * intGlArrayVar[0];
+		
+		intLocal = boolConst;
+		intLocal = intGlVar / charConst + intConst - 1;
+		intLocal = -charGlVar;
+		
+		intLocal = -intConst * 20;
+		
+		boolLocal = intConst * (2 + intGlArrayVar[0] - intGlVar);
+		
+		intGlVar = (-intGlVar + intGlArrayVar[1] * 4 * intConst * intLocal) / (2 * intConst);
+		
+	}
+}

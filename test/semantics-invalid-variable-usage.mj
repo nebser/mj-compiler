@@ -1,0 +1,62 @@
+// Semantics error
+
+program invalidVariableUsage
+
+const int intConst1 = 4, intConst2 = 'a';
+const bool boolConst1 = 5, boolConst2 = true;
+const char charConst1 = 'A';
+const char charConst2 = 1;
+
+int intGlVar1, intGlVar2, intGlArrayVar[];
+
+char charGlVar, charGlArrayVar[];
+
+bool boolGlArrayVar[], boolGlVar;
+
+{
+	void main()
+		bool boolLocal;
+		int intLocal;
+		char charLocal;
+	{
+		intGlVar1 = boolConst1;
+		intGlVar1 = charConst1;
+		intGlVar1 = intGlArrayVar;
+		
+		intGlVar1 = intConst1;
+		intGlVar1 = intGlVar2;
+		intGlVar1 = 60;
+		
+		intGlArrayVar = boolConst2;
+		intGlArrayVar = charConst1;
+		intGlArrayVar = intGlVar1;
+		
+		intGlArrayVar = new bool[intGlVar1];
+		intGlArrayVar = new char[intGlVar1];
+		
+		intGlArrayVar = new int[intGlVar1];
+		
+		charGlArrayVar = intGlArrayVar;
+		charGlArrayVar = intGlArrayVar[0];
+		
+		charGlArrayVar = new char['a'];
+		charGlArrayVar = new char[boolConst2];
+		charGlArrayVar = new char[charLocal];
+		
+		charGlArrayVar = new char[10];
+		
+		boolGlArrayVar = new bool[boolLocal];
+		boolGlArrayVar = new bool[intLocal];
+		
+		boolLocal = charGlArrayVar[0];
+		boolLocal = boolGlArrayVar[0];
+		
+		intLocal = boolGlArrayVar[0];
+		intLocal = intGlArrayVar[0];
+		
+		charLocal = intGlArrayVar[0];
+		charLocal = charGlArrayVar[0];
+		
+		intConst1 = 5;
+	}
+}
