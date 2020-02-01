@@ -6,3 +6,5 @@
 bin/
 lib/
 logs/
+test/output.obj
+spec/mjparser_astbuild.cup
