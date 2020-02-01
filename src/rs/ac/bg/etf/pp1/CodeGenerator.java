@@ -38,10 +38,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(GlobalVarDecl globalVarDecl) {
-		globalVarDecl.objlist.getObjs().forEach(obj -> {
-			obj.setAdr(Code.dataSize);
-			Code.dataSize += WORD_SIZE;
-		});
+		Code.dataSize += globalVarDecl.objlist.size() * WORD_SIZE;
 	}
 
 	@Override
@@ -54,7 +51,8 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(FactorTerm factorTerm) {
-		if (factorTerm.obj.getKind() != Obj.NO_VALUE) {
+		int kind = factorTerm.obj.getKind();
+		if (kind != Obj.NO_VALUE && kind != Obj.Meth) {
 			Code.load(factorTerm.obj);
 		}
 	}
@@ -267,12 +265,6 @@ public class CodeGenerator extends VisitorAdaptor {
 			Code.mainPc = Code.pc;
 		}
 		Collection<Obj> locals = globalMethodHeader.obj.getLocalSymbols();
-
-		int addr = 0;
-		for (Obj current : locals) {
-			current.setAdr(addr);
-			addr += WORD_SIZE;
-		}
 
 		Code.put(Code.enter);
 		Code.put(globalMethodHeader.obj.getLevel());

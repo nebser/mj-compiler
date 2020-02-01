@@ -33,13 +33,13 @@ public class Compiler {
 			Tab.init();
 			Yylex lexer = new Yylex(br);
 
+			MJParser p = new MJParser(lexer);
+			Symbol s = p.parse();
+
 			if (lexer.isErrorDetected()) {
 				log.info("Program je leksicki neispravan");
 				return;
 			}
-
-			MJParser p = new MJParser(lexer);
-			Symbol s = p.parse();
 
 			Program prog = (Program) (s.value);
 

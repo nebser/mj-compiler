@@ -202,6 +202,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			if (type.equals(o.getType())) {
 				Tab.insert(Obj.Con, o.getName(), type, o.getAdr());
 			} else {
+				Tab.insert(Obj.Con, o.getName(), type, 0);
 				reportError("Nekompatibilni tipovi u izrazu za inicijalizaciju konstante " + o.getName(),
 						constantDeclarations);
 			}
