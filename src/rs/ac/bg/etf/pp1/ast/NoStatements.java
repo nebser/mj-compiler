@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Mod extends Mulop {
+public class NoStatements extends StatementSection {
 
-    public Mod () {
+    public NoStatements () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class Mod extends Mulop {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Mod(\n");
+        buffer.append("NoStatements(\n");
 
         buffer.append(tab);
-        buffer.append(") [Mod]");
+        buffer.append(") [NoStatements]");
         return buffer.toString();
     }
 }

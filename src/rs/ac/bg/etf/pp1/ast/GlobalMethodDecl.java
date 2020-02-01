@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 1/1/2020 3:41:25
+// 1/1/2020 4:6:5
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,15 +11,15 @@ public class GlobalMethodDecl implements SyntaxNode {
     private int line;
     private GlobalMethodHeader GlobalMethodHeader;
     private VarDeclSection VarDeclSection;
-    private StatementList StatementList;
+    private StatementSection StatementSection;
 
-    public GlobalMethodDecl (GlobalMethodHeader GlobalMethodHeader, VarDeclSection VarDeclSection, StatementList StatementList) {
+    public GlobalMethodDecl (GlobalMethodHeader GlobalMethodHeader, VarDeclSection VarDeclSection, StatementSection StatementSection) {
         this.GlobalMethodHeader=GlobalMethodHeader;
         if(GlobalMethodHeader!=null) GlobalMethodHeader.setParent(this);
         this.VarDeclSection=VarDeclSection;
         if(VarDeclSection!=null) VarDeclSection.setParent(this);
-        this.StatementList=StatementList;
-        if(StatementList!=null) StatementList.setParent(this);
+        this.StatementSection=StatementSection;
+        if(StatementSection!=null) StatementSection.setParent(this);
     }
 
     public GlobalMethodHeader getGlobalMethodHeader() {
@@ -38,12 +38,12 @@ public class GlobalMethodDecl implements SyntaxNode {
         this.VarDeclSection=VarDeclSection;
     }
 
-    public StatementList getStatementList() {
-        return StatementList;
+    public StatementSection getStatementSection() {
+        return StatementSection;
     }
 
-    public void setStatementList(StatementList StatementList) {
-        this.StatementList=StatementList;
+    public void setStatementSection(StatementSection StatementSection) {
+        this.StatementSection=StatementSection;
     }
 
     public SyntaxNode getParent() {
@@ -69,20 +69,20 @@ public class GlobalMethodDecl implements SyntaxNode {
     public void childrenAccept(Visitor visitor) {
         if(GlobalMethodHeader!=null) GlobalMethodHeader.accept(visitor);
         if(VarDeclSection!=null) VarDeclSection.accept(visitor);
-        if(StatementList!=null) StatementList.accept(visitor);
+        if(StatementSection!=null) StatementSection.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(GlobalMethodHeader!=null) GlobalMethodHeader.traverseTopDown(visitor);
         if(VarDeclSection!=null) VarDeclSection.traverseTopDown(visitor);
-        if(StatementList!=null) StatementList.traverseTopDown(visitor);
+        if(StatementSection!=null) StatementSection.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(GlobalMethodHeader!=null) GlobalMethodHeader.traverseBottomUp(visitor);
         if(VarDeclSection!=null) VarDeclSection.traverseBottomUp(visitor);
-        if(StatementList!=null) StatementList.traverseBottomUp(visitor);
+        if(StatementSection!=null) StatementSection.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -103,8 +103,8 @@ public class GlobalMethodDecl implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(StatementList!=null)
-            buffer.append(StatementList.toString("  "+tab));
+        if(StatementSection!=null)
+            buffer.append(StatementSection.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

@@ -54,7 +54,7 @@ terminal EQUALS, DIFFERS, GREATER, GREATER_OR_EQUAL, LESS, LESS_OR_EQUAL;
 nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
 nonterminal VarDecl, AbstractClassDecl, ClassDecl;
 nonterminal VarDeclSection, VarDeclList;
-nonterminal StatementList, Statement, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
+nonterminal StatementList, Statement, StatementSection, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
 nonterminal Assignop, ActPars, ExprList, Relop;
@@ -140,7 +140,7 @@ GlobalMethodDeclList ::= (GlobalMethodDeclarations) GlobalMethodDeclList GlobalM
 						 (GlobalMethodDeclaration) GlobalMethodDecl
 						 ;
 						 
-GlobalMethodDecl ::= (GlobalMethodDecl) GlobalMethodHeader VarDeclSection LBRACE StatementList RBRACE;
+GlobalMethodDecl ::= (GlobalMethodDecl) GlobalMethodHeader VarDeclSection LBRACE StatementSection RBRACE;
 
 GlobalMethodHeader ::= (GlobalMethodHeader) ReturnType IDENT:ident LPARENTHESIS FormPars RPARENTHESIS;
 					
@@ -192,7 +192,7 @@ AnyMethodDecl ::= (RealMethodDeclaration) MethodDecl
 				(AbstractMethodDeclaration) ABSTRACT MethodHeader SEMI_COLON
 				;
 					
-MethodDecl ::= (MethodDecl) MethodHeader VarDeclSection LBRACE StatementList RBRACE;
+MethodDecl ::= (MethodDecl) MethodHeader VarDeclSection LBRACE StatementSection RBRACE;
 
 MethodHeader ::= (MethodHeader) ReturnType IDENT:ident LPARENTHESIS FormPars RPARENTHESIS;
 
@@ -210,6 +210,11 @@ FormParsList ::= (ParameterList) FormParsList COMMA Type Var
 				 |
 				 (SinglePar) Type Var
 				 ;
+				 
+StatementSection ::= (RealStatements) StatementList
+					|
+					(NoStatements) /* epsilon */
+					;
 			
 StatementList ::= (Statements) StatementList Statement
 					|
