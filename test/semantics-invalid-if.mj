@@ -1,0 +1,47 @@
+// Semantics error
+
+program invalidIf
+
+{
+	void do(int a[], int n) 
+		int i, j;
+	{
+		for (i = 0; i < n; i++) {
+			print(a[i]);
+			
+			for (j = i+1; j < n; j++) {
+				if ((j - i) % 2 != 0) {
+					break;
+				}
+				print(a[i]);
+			}
+			
+			break;
+		}
+		
+		break;
+		continue;
+		
+		if (len(a)) {
+			for (i = 0; i < n; i++) {
+				a[i]++;
+			}
+		} else {
+			for (i = 0; i < n; i++) {
+				a[i] = 0;
+			}		
+		}
+		
+		return a;
+	}
+	
+	void main() 
+		int a[];
+	{
+		a = new int[2];
+		a[0] = 5;
+		a[1] = 6;
+		do(a, 2);
+	}
+
+}

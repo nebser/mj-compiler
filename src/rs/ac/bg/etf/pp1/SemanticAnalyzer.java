@@ -27,10 +27,13 @@ import rs.ac.bg.etf.pp1.ast.DecrementDesignator;
 import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorFactor;
 import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
+import rs.ac.bg.etf.pp1.ast.Differs;
 import rs.ac.bg.etf.pp1.ast.DivideEquals;
+import rs.ac.bg.etf.pp1.ast.Equals;
 import rs.ac.bg.etf.pp1.ast.ErrorFormPars;
 import rs.ac.bg.etf.pp1.ast.ErrorFormParsElem;
 import rs.ac.bg.etf.pp1.ast.Expr;
+import rs.ac.bg.etf.pp1.ast.ExprOp;
 import rs.ac.bg.etf.pp1.ast.Expression;
 import rs.ac.bg.etf.pp1.ast.ExpressionFactor;
 import rs.ac.bg.etf.pp1.ast.ExpressionList;
@@ -69,9 +72,11 @@ import rs.ac.bg.etf.pp1.ast.Read;
 import rs.ac.bg.etf.pp1.ast.RegularFormParsElem;
 import rs.ac.bg.etf.pp1.ast.RegularPrefix;
 import rs.ac.bg.etf.pp1.ast.RegularVarDecl;
+import rs.ac.bg.etf.pp1.ast.Relop;
 import rs.ac.bg.etf.pp1.ast.RetExpr;
 import rs.ac.bg.etf.pp1.ast.Return;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
+import rs.ac.bg.etf.pp1.ast.SingleExpr;
 import rs.ac.bg.etf.pp1.ast.SinglePar;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Term;
@@ -847,6 +852,41 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(Continue continue_) {
 		if (forCnt <= 0) {
 			reportError("Naredba continue upotrebljena van for petlje", continue_.getParent());
+		}
+	}
+
+	@Override
+	public void visit(SingleExpr singleExpr) {
+		Struct exprType = singleExpr.getExpr().obj.getType();
+		if (exprType.equals(Tab.noType)) {
+			return;
+		}
+		if (!exprType.equals(Tab.boolType)) {
+			reportError("Izraz se ne moze koristiti kao uslov u okviru if naredbe", singleExpr.getExpr());
+		}
+	}
+
+	@Override
+	public void visit(ExprOp exprOp) {
+		Struct firstExprType = exprOp.getExpr().obj.getType();
+		Struct secondExprType = exprOp.getExpr().obj.getType();
+		if (firstExprType.equals(Tab.noType) || secondExprType.equals(Tab.noType)) {
+			return;
+		}
+
+		if (!firstExprType.compatibleWith(secondExprType)) {
+			reportError("Tipovi u relacionom izrazu nizu kompatibilni", exprOp.getExpr());
+			return;
+		}
+
+		int firstKind = firstExprType.getKind();
+		int secondKind = secondExprType.getKind();
+		if (firstKind == Struct.Array || secondKind == Struct.Array) {
+			Relop relop = exprOp.getRelop();
+			if (!(relop instanceof Equals) && !(relop instanceof Differs)) {
+				reportError("Za nizove moguce je samo koristiti operatore == i != u relacionim izrazima",
+						exprOp.getExpr());
+			}
 		}
 	}
 
