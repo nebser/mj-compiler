@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 4:22:52
+// 2/1/2020 5:14:46
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,15 +8,15 @@ package rs.ac.bg.etf.pp1.ast;
 public class ForStmt extends Statement {
 
     private OptionalDesignatorStatement OptionalDesignatorStatement;
-    private Condition Condition;
+    private LoopCondition LoopCondition;
     private OptionalDesignatorStatement OptionalDesignatorStatement1;
     private Statement Statement;
 
-    public ForStmt (OptionalDesignatorStatement OptionalDesignatorStatement, Condition Condition, OptionalDesignatorStatement OptionalDesignatorStatement1, Statement Statement) {
+    public ForStmt (OptionalDesignatorStatement OptionalDesignatorStatement, LoopCondition LoopCondition, OptionalDesignatorStatement OptionalDesignatorStatement1, Statement Statement) {
         this.OptionalDesignatorStatement=OptionalDesignatorStatement;
         if(OptionalDesignatorStatement!=null) OptionalDesignatorStatement.setParent(this);
-        this.Condition=Condition;
-        if(Condition!=null) Condition.setParent(this);
+        this.LoopCondition=LoopCondition;
+        if(LoopCondition!=null) LoopCondition.setParent(this);
         this.OptionalDesignatorStatement1=OptionalDesignatorStatement1;
         if(OptionalDesignatorStatement1!=null) OptionalDesignatorStatement1.setParent(this);
         this.Statement=Statement;
@@ -31,12 +31,12 @@ public class ForStmt extends Statement {
         this.OptionalDesignatorStatement=OptionalDesignatorStatement;
     }
 
-    public Condition getCondition() {
-        return Condition;
+    public LoopCondition getLoopCondition() {
+        return LoopCondition;
     }
 
-    public void setCondition(Condition Condition) {
-        this.Condition=Condition;
+    public void setLoopCondition(LoopCondition LoopCondition) {
+        this.LoopCondition=LoopCondition;
     }
 
     public OptionalDesignatorStatement getOptionalDesignatorStatement1() {
@@ -61,7 +61,7 @@ public class ForStmt extends Statement {
 
     public void childrenAccept(Visitor visitor) {
         if(OptionalDesignatorStatement!=null) OptionalDesignatorStatement.accept(visitor);
-        if(Condition!=null) Condition.accept(visitor);
+        if(LoopCondition!=null) LoopCondition.accept(visitor);
         if(OptionalDesignatorStatement1!=null) OptionalDesignatorStatement1.accept(visitor);
         if(Statement!=null) Statement.accept(visitor);
     }
@@ -69,14 +69,14 @@ public class ForStmt extends Statement {
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(OptionalDesignatorStatement!=null) OptionalDesignatorStatement.traverseTopDown(visitor);
-        if(Condition!=null) Condition.traverseTopDown(visitor);
+        if(LoopCondition!=null) LoopCondition.traverseTopDown(visitor);
         if(OptionalDesignatorStatement1!=null) OptionalDesignatorStatement1.traverseTopDown(visitor);
         if(Statement!=null) Statement.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(OptionalDesignatorStatement!=null) OptionalDesignatorStatement.traverseBottomUp(visitor);
-        if(Condition!=null) Condition.traverseBottomUp(visitor);
+        if(LoopCondition!=null) LoopCondition.traverseBottomUp(visitor);
         if(OptionalDesignatorStatement1!=null) OptionalDesignatorStatement1.traverseBottomUp(visitor);
         if(Statement!=null) Statement.traverseBottomUp(visitor);
         accept(visitor);
@@ -93,8 +93,8 @@ public class ForStmt extends Statement {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Condition!=null)
-            buffer.append(Condition.toString("  "+tab));
+        if(LoopCondition!=null)
+            buffer.append(LoopCondition.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

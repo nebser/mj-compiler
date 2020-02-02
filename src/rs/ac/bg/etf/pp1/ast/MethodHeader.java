@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 4:22:52
+// 2/1/2020 5:14:46
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -13,14 +13,14 @@ public class MethodHeader implements SyntaxNode {
 
     private ReturnType ReturnType;
     private String ident;
-    private FormPars FormPars;
+    private FormParsSection FormParsSection;
 
-    public MethodHeader (ReturnType ReturnType, String ident, FormPars FormPars) {
+    public MethodHeader (ReturnType ReturnType, String ident, FormParsSection FormParsSection) {
         this.ReturnType=ReturnType;
         if(ReturnType!=null) ReturnType.setParent(this);
         this.ident=ident;
-        this.FormPars=FormPars;
-        if(FormPars!=null) FormPars.setParent(this);
+        this.FormParsSection=FormParsSection;
+        if(FormParsSection!=null) FormParsSection.setParent(this);
     }
 
     public ReturnType getReturnType() {
@@ -39,12 +39,12 @@ public class MethodHeader implements SyntaxNode {
         this.ident=ident;
     }
 
-    public FormPars getFormPars() {
-        return FormPars;
+    public FormParsSection getFormParsSection() {
+        return FormParsSection;
     }
 
-    public void setFormPars(FormPars FormPars) {
-        this.FormPars=FormPars;
+    public void setFormParsSection(FormParsSection FormParsSection) {
+        this.FormParsSection=FormParsSection;
     }
 
     public SyntaxNode getParent() {
@@ -69,18 +69,18 @@ public class MethodHeader implements SyntaxNode {
 
     public void childrenAccept(Visitor visitor) {
         if(ReturnType!=null) ReturnType.accept(visitor);
-        if(FormPars!=null) FormPars.accept(visitor);
+        if(FormParsSection!=null) FormParsSection.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ReturnType!=null) ReturnType.traverseTopDown(visitor);
-        if(FormPars!=null) FormPars.traverseTopDown(visitor);
+        if(FormParsSection!=null) FormParsSection.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ReturnType!=null) ReturnType.traverseBottomUp(visitor);
-        if(FormPars!=null) FormPars.traverseBottomUp(visitor);
+        if(FormParsSection!=null) FormParsSection.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -98,8 +98,8 @@ public class MethodHeader implements SyntaxNode {
         buffer.append(" "+tab+ident);
         buffer.append("\n");
 
-        if(FormPars!=null)
-            buffer.append(FormPars.toString("  "+tab));
+        if(FormParsSection!=null)
+            buffer.append(FormParsSection.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

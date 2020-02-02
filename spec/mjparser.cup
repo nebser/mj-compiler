@@ -60,11 +60,11 @@ nonterminal Condition, Matched, Unmatched, OptionalDesignatorStatement, ForState
 nonterminal Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
-nonterminal DeclElem;
+nonterminal DeclElem, LoopCondition;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
-nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, FormParsSection, FormParsElem;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var, VarPrefix;
@@ -176,7 +176,13 @@ AnyMethodDecl ::= (RealMethodDeclaration) MethodDecl
 					
 MethodDecl ::= (MethodDecl) MethodHeader VarDeclSection LBRACE StatementSection RBRACE;
 
-MethodHeader ::= (MethodHeader) ReturnType IDENT:ident LPARENTHESIS FormPars RPARENTHESIS;
+MethodHeader ::= (MethodHeader) ReturnType IDENT:ident LPARENTHESIS FormParsSection;
+
+FormParsSection ::= (ValidFormPars) FormPars RPARENTHESIS
+					|
+					(ErrorFormPars) error RPARENTHESIS:l
+				  	{: parser.report_error("Iregularna sintaksa za deklaraciju formalnih parametara funkcije " + lleft, null); :}
+				  	;
 
 ReturnType ::= (NonVoidType) Type
 				|
@@ -188,10 +194,16 @@ FormPars ::= (FormalParameters) FormParsList
 			(NoFormalParameters) /* epsilon */
 			;
 			
-FormParsList ::= (ParameterList) FormParsList COMMA Type Var
+FormParsList ::= (ParameterList) FormParsElem Type Var
 				 |
 				 (SinglePar) Type Var
 				 ;
+				 
+FormParsElem ::= (RegularFormParsElem) FormParsList COMMA
+				|
+				(ErrorFormParsElem) error COMMA:l
+				{: parser.report_error("Iregularna sintaksa za deklaraciju formalnih parametara funkcije " + lleft, null); :}
+				;
 				 
 StatementSection ::= (RealStatements) StatementList
 					|
@@ -203,11 +215,17 @@ StatementList ::= (Statements) StatementList Statement
 					(SingleStatement) Statement
 					;
 					
+LoopCondition ::= (RegularCondition) Condition SEMI_COLON
+				  |
+				  (ErrorCondition) error SEMI_COLON:l
+				  {: parser.report_error("Iregularna sintaksa za izraz provere uslova za ostanak u petlji " + lleft, null); :}
+				  ;
+					
 Statement ::= (MathedStmt) Matched
 				|
 			  (UnmatchedStmt) Unmatched
 			  |
-			  (ForStmt) FOR LPARENTHESIS OptionalDesignatorStatement SEMI_COLON Condition SEMI_COLON OptionalDesignatorStatement RPARENTHESIS Statement
+			  (ForStmt) FOR LPARENTHESIS OptionalDesignatorStatement SEMI_COLON LoopCondition OptionalDesignatorStatement RPARENTHESIS Statement
 			  ;
 			  
 Matched ::= (DesignatorStmt) DesignatorSentence

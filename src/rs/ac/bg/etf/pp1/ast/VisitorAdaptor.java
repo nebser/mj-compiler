@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 4:22:53
+// 2/1/2020 5:14:46
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -20,11 +20,13 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Var Var) { }
     public void visit(ConstDefinition ConstDefinition) { }
     public void visit(StatementList StatementList) { }
+    public void visit(LoopCondition LoopCondition) { }
     public void visit(FactorList FactorList) { }
     public void visit(Addop Addop) { }
     public void visit(Factor Factor) { }
     public void visit(VarList VarList) { }
     public void visit(CondTerm CondTerm) { }
+    public void visit(FormParsSection FormParsSection) { }
     public void visit(AbstractMethodDecl AbstractMethodDecl) { }
     public void visit(ConstList ConstList) { }
     public void visit(DeclList DeclList) { }
@@ -48,6 +50,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(DeclElem DeclElem) { }
     public void visit(ReturnExpr ReturnExpr) { }
     public void visit(VarDecl VarDecl) { }
+    public void visit(FormParsElem FormParsElem) { }
     public void visit(AnyMethodDeclList AnyMethodDeclList) { }
     public void visit(MethodDeclSection MethodDeclSection) { }
     public void visit(CondFact CondFact) { }
@@ -122,16 +125,22 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ForStmt ForStmt) { visit(); }
     public void visit(UnmatchedStmt UnmatchedStmt) { visit(); }
     public void visit(MathedStmt MathedStmt) { visit(); }
+    public void visit(ErrorCondition ErrorCondition) { visit(); }
+    public void visit(RegularCondition RegularCondition) { visit(); }
     public void visit(SingleStatement SingleStatement) { visit(); }
     public void visit(Statements Statements) { visit(); }
     public void visit(NoStatements NoStatements) { visit(); }
     public void visit(RealStatements RealStatements) { visit(); }
+    public void visit(ErrorFormParsElem ErrorFormParsElem) { visit(); }
+    public void visit(RegularFormParsElem RegularFormParsElem) { visit(); }
     public void visit(SinglePar SinglePar) { visit(); }
     public void visit(ParameterList ParameterList) { visit(); }
     public void visit(NoFormalParameters NoFormalParameters) { visit(); }
     public void visit(FormalParameters FormalParameters) { visit(); }
     public void visit(VoidType VoidType) { visit(); }
     public void visit(NonVoidType NonVoidType) { visit(); }
+    public void visit(ErrorFormPars ErrorFormPars) { visit(); }
+    public void visit(ValidFormPars ValidFormPars) { visit(); }
     public void visit(MethodHeader MethodHeader) { visit(); }
     public void visit(MethodDecl MethodDecl) { visit(); }
     public void visit(AbstractMethodDeclaration AbstractMethodDeclaration) { visit(); }

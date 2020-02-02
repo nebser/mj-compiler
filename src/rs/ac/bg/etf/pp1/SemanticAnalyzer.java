@@ -23,6 +23,8 @@ import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorFactor;
 import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
 import rs.ac.bg.etf.pp1.ast.DivideEquals;
+import rs.ac.bg.etf.pp1.ast.ErrorFormPars;
+import rs.ac.bg.etf.pp1.ast.ErrorFormParsElem;
 import rs.ac.bg.etf.pp1.ast.Expr;
 import rs.ac.bg.etf.pp1.ast.ExpressionFactor;
 import rs.ac.bg.etf.pp1.ast.Factor;
@@ -54,6 +56,7 @@ import rs.ac.bg.etf.pp1.ast.PrintWithNumber;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.ProgramName;
 import rs.ac.bg.etf.pp1.ast.Read;
+import rs.ac.bg.etf.pp1.ast.RegularFormParsElem;
 import rs.ac.bg.etf.pp1.ast.RegularPrefix;
 import rs.ac.bg.etf.pp1.ast.RegularVarDecl;
 import rs.ac.bg.etf.pp1.ast.RetExpr;
@@ -65,6 +68,7 @@ import rs.ac.bg.etf.pp1.ast.Term;
 import rs.ac.bg.etf.pp1.ast.TermExpression;
 import rs.ac.bg.etf.pp1.ast.Type;
 import rs.ac.bg.etf.pp1.ast.UnaryMinusExpression;
+import rs.ac.bg.etf.pp1.ast.ValidFormPars;
 import rs.ac.bg.etf.pp1.ast.Variable;
 import rs.ac.bg.etf.pp1.ast.Variables;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
@@ -376,7 +380,17 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		} else {
 			parameterList.objlist.add(new Obj(Obj.Var, parameterList.getVar().var.getName(), typeObj.getType()));
 		}
-		parameterList.objlist.add(parameterList.getFormParsList().objlist);
+		parameterList.objlist.add(parameterList.getFormParsElem().objlist);
+	}
+
+	@Override
+	public void visit(RegularFormParsElem regularFormParsElem) {
+		regularFormParsElem.objlist = regularFormParsElem.getFormParsList().objlist;
+	}
+
+	@Override
+	public void visit(ErrorFormParsElem errorFormParsElem) {
+		errorFormParsElem.objlist = new ObjList();
 	}
 
 	@Override
@@ -412,7 +426,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		if (!typeObj.equals(Tab.noObj) && typeObj.getKind() == Obj.Meth) {
 			reportError("Metoda " + methodName + " je vec definisan", methodHeader);
 		}
-		ObjList formPars = methodHeader.getFormPars().objlist;
+		ObjList formPars = methodHeader.getFormParsSection().objlist;
 
 		if (methodName.equals("main")) {
 			if (formPars.size() != 0) {
@@ -430,6 +444,16 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		formPars.getObjs().forEach(p -> {
 			Tab.insert(Obj.Var, p.getName(), p.getType());
 		});
+	}
+
+	@Override
+	public void visit(ValidFormPars validFormPars) {
+		validFormPars.objlist = validFormPars.getFormPars().objlist;
+	}
+
+	@Override
+	public void visit(ErrorFormPars errorFormPars) {
+		errorFormPars.objlist = new ObjList();
 	}
 
 	@Override
