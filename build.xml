@@ -6,6 +6,7 @@
 			<fileset dir="src/rs/ac/bg/etf/pp1">
 				<exclude name="Compiler.java"/>
 				<exclude name="Counter.java"/>
+				<exclude name="CounterVisitor.java"/>
 				<exclude name="SemanticAnalyzer.java"/>
 				<exclude name="CodeGenerator.java"/>
 				<exclude name="OperationCodeGenerator.java"/>

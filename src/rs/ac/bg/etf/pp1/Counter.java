@@ -3,21 +3,21 @@ package rs.ac.bg.etf.pp1;
 import java.util.ArrayList;
 
 import rs.ac.bg.etf.pp1.ast.ArrayVar;
+import rs.ac.bg.etf.pp1.ast.ClassDecl;
 import rs.ac.bg.etf.pp1.ast.ClassName;
 import rs.ac.bg.etf.pp1.ast.Constant;
 import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
-import rs.ac.bg.etf.pp1.ast.FieldDecl;
 import rs.ac.bg.etf.pp1.ast.ForStmt;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
+import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
 import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
-import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
 import rs.ac.bg.etf.pp1.ast.MathedStmt;
+import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
 import rs.ac.bg.etf.pp1.ast.PrimitiveVar;
 import rs.ac.bg.etf.pp1.ast.Print;
 import rs.ac.bg.etf.pp1.ast.PrintWithNumber;
 import rs.ac.bg.etf.pp1.ast.Read;
-import rs.ac.bg.etf.pp1.ast.RegularVarDecl;
 import rs.ac.bg.etf.pp1.ast.Statement;
 import rs.ac.bg.etf.pp1.ast.UnmatchedStmt;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
@@ -32,7 +32,7 @@ public class Counter extends VisitorAdaptor {
 	private int classDeclarations = 0;
 	private int methodDeclarations = 0;
 	private int globalArrayDeclarations = 0;
-	private VarDeclMode varDeclMode;
+	private VarDeclMode varDeclMode = VarDeclMode.GLOBAL;
 	private ArrayList<MethodContext> methods = new ArrayList<MethodContext>();
 	private MethodContext currentMethod;
 
@@ -72,21 +72,6 @@ public class Counter extends VisitorAdaptor {
 	};
 
 	@Override
-	public void visit(GlobalVarDecl globalVarDecl) {
-		varDeclMode = VarDeclMode.GLOBAL;
-	}
-
-	@Override
-	public void visit(RegularVarDecl regularVarDecl) {
-		varDeclMode = VarDeclMode.LOCAL;
-	}
-
-	@Override
-	public void visit(FieldDecl fieldDecl) {
-		varDeclMode = VarDeclMode.FIELD;
-	}
-
-	@Override
 	public void visit(PrimitiveVar PrimitiveVar) {
 		switch (varDeclMode) {
 		case GLOBAL:
@@ -117,16 +102,28 @@ public class Counter extends VisitorAdaptor {
 
 	@Override
 	public void visit(MethodHeader methodHeader) {
+		varDeclMode = VarDeclMode.LOCAL;
 		methodDeclarations++;
 		currentMethod = new MethodContext(methodHeader.getIdent());
 		methods.add(currentMethod);
 	}
 
 	@Override
+	public void visit(MethodDecl methodDecl) {
+		varDeclMode = VarDeclMode.GLOBAL;
+	}
+
+	@Override
 	public void visit(GlobalMethodHeader globalMethodHeader) {
+		varDeclMode = VarDeclMode.LOCAL;
 		methodDeclarations++;
 		currentMethod = new MethodContext(globalMethodHeader.getIdent());
 		methods.add(currentMethod);
+	}
+
+	@Override
+	public void visit(GlobalMethodDecl globalMethodDecl) {
+		varDeclMode = VarDeclMode.GLOBAL;
 	}
 
 	@Override
@@ -162,6 +159,12 @@ public class Counter extends VisitorAdaptor {
 	@Override
 	public void visit(ClassName ClassName) {
 		classDeclarations++;
+		varDeclMode = VarDeclMode.FIELD;
+	}
+
+	@Override
+	public void visit(ClassDecl classDecl) {
+		varDeclMode = VarDeclMode.GLOBAL;
 	}
 
 	@Override

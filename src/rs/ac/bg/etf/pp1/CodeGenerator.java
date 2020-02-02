@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import rs.ac.bg.etf.pp1.CounterVisitor.VarCounter;
 import rs.ac.bg.etf.pp1.ast.AddExpression;
 import rs.ac.bg.etf.pp1.ast.Addop;
 import rs.ac.bg.etf.pp1.ast.AssignDesignator;
@@ -13,7 +14,7 @@ import rs.ac.bg.etf.pp1.ast.FactorTerm;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
 import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
 import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
-import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
+import rs.ac.bg.etf.pp1.ast.GlobalVariableDeclarations;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
 import rs.ac.bg.etf.pp1.ast.MulTerm;
 import rs.ac.bg.etf.pp1.ast.Mulop;
@@ -37,8 +38,10 @@ public class CodeGenerator extends VisitorAdaptor {
 	Logger log = Logger.getLogger(getClass());
 
 	@Override
-	public void visit(GlobalVarDecl globalVarDecl) {
-		Code.dataSize += globalVarDecl.objlist.size() * WORD_SIZE;
+	public void visit(GlobalVariableDeclarations globalVariableDeclarations) {
+		VarCounter cnt = new VarCounter();
+		globalVariableDeclarations.traverseTopDown(cnt);
+		Code.dataSize = cnt.getCount() * WORD_SIZE;
 	}
 
 	@Override

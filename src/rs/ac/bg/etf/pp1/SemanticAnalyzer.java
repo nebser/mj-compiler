@@ -32,7 +32,7 @@ import rs.ac.bg.etf.pp1.ast.FormalParameters;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
 import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
 import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
-import rs.ac.bg.etf.pp1.ast.GlobalVarDecl;
+import rs.ac.bg.etf.pp1.ast.GlobalVariableDeclarations;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
@@ -299,32 +299,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	@Override
 	public void visit(RegularPrefix regularPrefix) {
 		regularPrefix.var = regularPrefix.getVar().var;
-	}
-
-	@Override
-	public void visit(GlobalVarDecl globalVarDecl) {
-		String typeName = globalVarDecl.getType().getIdent();
-		Obj typeObj = Tab.find(typeName);
-		if (typeObj.equals(Tab.noObj)) {
-			reportError("Tip " + typeName + " nije definisan", globalVarDecl);
-			return;
-		}
-		globalVarDecl.objlist = new ObjList();
-		globalVarDecl.getVarList().varlist.getVars().forEach(v -> {
-			String varName = v.getName();
-			if (Tab.currentScope.findSymbol(varName) != null) {
-				reportError("Simbol " + varName + " je vec definisan", globalVarDecl);
-				return;
-			}
-			if (v.isArray()) {
-				Obj obj = Tab.insert(Obj.Var, varName, new Struct(Struct.Array, typeObj.getType()));
-				globalVarDecl.objlist.add(obj);
-
-			} else {
-				Obj obj = Tab.insert(Obj.Var, varName, typeObj.getType());
-				globalVarDecl.objlist.add(obj);
-			}
-		});
 	}
 
 	@Override

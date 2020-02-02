@@ -1,25 +1,25 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 2:55:36
+// 2/1/2020 4:2:12
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class GlobalVariableDeclarations extends DeclElem {
 
-    private GlobalVarDecl GlobalVarDecl;
+    private VarDecl VarDecl;
 
-    public GlobalVariableDeclarations (GlobalVarDecl GlobalVarDecl) {
-        this.GlobalVarDecl=GlobalVarDecl;
-        if(GlobalVarDecl!=null) GlobalVarDecl.setParent(this);
+    public GlobalVariableDeclarations (VarDecl VarDecl) {
+        this.VarDecl=VarDecl;
+        if(VarDecl!=null) VarDecl.setParent(this);
     }
 
-    public GlobalVarDecl getGlobalVarDecl() {
-        return GlobalVarDecl;
+    public VarDecl getVarDecl() {
+        return VarDecl;
     }
 
-    public void setGlobalVarDecl(GlobalVarDecl GlobalVarDecl) {
-        this.GlobalVarDecl=GlobalVarDecl;
+    public void setVarDecl(VarDecl VarDecl) {
+        this.VarDecl=VarDecl;
     }
 
     public void accept(Visitor visitor) {
@@ -27,16 +27,16 @@ public class GlobalVariableDeclarations extends DeclElem {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(GlobalVarDecl!=null) GlobalVarDecl.accept(visitor);
+        if(VarDecl!=null) VarDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(GlobalVarDecl!=null) GlobalVarDecl.traverseTopDown(visitor);
+        if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(GlobalVarDecl!=null) GlobalVarDecl.traverseBottomUp(visitor);
+        if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -45,8 +45,8 @@ public class GlobalVariableDeclarations extends DeclElem {
         buffer.append(tab);
         buffer.append("GlobalVariableDeclarations(\n");
 
-        if(GlobalVarDecl!=null)
-            buffer.append(GlobalVarDecl.toString("  "+tab));
+        if(VarDecl!=null)
+            buffer.append(VarDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

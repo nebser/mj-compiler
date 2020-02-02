@@ -51,7 +51,7 @@ terminal MULTIPLY, DIVIDE, MOD;
 terminal NEW, COLON;
 terminal EQUALS, DIFFERS, GREATER, GREATER_OR_EQUAL, LESS, LESS_OR_EQUAL;
 
-nonterminal DeclSection, DeclList, DeclElem, MethodDeclSection, MethodDecl;
+nonterminal DeclSection, DeclList, MethodDeclSection, MethodDecl;
 nonterminal VarDecl, AbstractClassDecl, ClassDecl;
 nonterminal VarDeclSection, VarDeclList;
 nonterminal StatementList, Statement, StatementSection, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
@@ -61,11 +61,11 @@ nonterminal Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
 nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
-nonterminal GlobalMethodDeclList, GlobalMethodDecl;
+nonterminal GlobalMethodDeclList, GlobalMethodDecl, DeclElem;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader, GlobalMethodHeader;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
-nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, GlobalVarDecl;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var, VarPrefix;
@@ -88,7 +88,7 @@ DeclList ::= (Declarations) DeclList DeclElem
 			
 DeclElem ::= (ConstantDeclarations) CONST Type ConstList
 			|
-			(GlobalVariableDeclarations) GlobalVarDecl
+			(GlobalVariableDeclarations) VarDecl
 			|
 			(GlobalAbstactClassDeclarations) AbstractClassDecl
 			|
@@ -107,8 +107,6 @@ ConstDefinition ::= (NumberConstant) IDENT:name ASSIGN NUMBER:value
 					(BoolConstant) IDENT:name ASSIGN BOOL:value
 					;
 					
-GlobalVarDecl ::= (GlobalVarDecl) Type VarList SEMI_COLON;
-
 VarDecl ::= (RegularVarDecl) Type VarList SEMI_COLON
 			|
 			(ErrorDecl) error SEMI_COLON:l
