@@ -1,28 +1,28 @@
 // generated with ast extension for cup
 // version 0.8
-// 1/1/2020 4:6:5
+// 2/1/2020 2:55:36
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class Variables extends VarList {
 
-    private Var Var;
+    private VarPrefix VarPrefix;
     private VarList VarList;
 
-    public Variables (Var Var, VarList VarList) {
-        this.Var=Var;
-        if(Var!=null) Var.setParent(this);
+    public Variables (VarPrefix VarPrefix, VarList VarList) {
+        this.VarPrefix=VarPrefix;
+        if(VarPrefix!=null) VarPrefix.setParent(this);
         this.VarList=VarList;
         if(VarList!=null) VarList.setParent(this);
     }
 
-    public Var getVar() {
-        return Var;
+    public VarPrefix getVarPrefix() {
+        return VarPrefix;
     }
 
-    public void setVar(Var Var) {
-        this.Var=Var;
+    public void setVarPrefix(VarPrefix VarPrefix) {
+        this.VarPrefix=VarPrefix;
     }
 
     public VarList getVarList() {
@@ -38,18 +38,18 @@ public class Variables extends VarList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Var!=null) Var.accept(visitor);
+        if(VarPrefix!=null) VarPrefix.accept(visitor);
         if(VarList!=null) VarList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Var!=null) Var.traverseTopDown(visitor);
+        if(VarPrefix!=null) VarPrefix.traverseTopDown(visitor);
         if(VarList!=null) VarList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Var!=null) Var.traverseBottomUp(visitor);
+        if(VarPrefix!=null) VarPrefix.traverseBottomUp(visitor);
         if(VarList!=null) VarList.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -59,8 +59,8 @@ public class Variables extends VarList {
         buffer.append(tab);
         buffer.append("Variables(\n");
 
-        if(Var!=null)
-            buffer.append(Var.toString("  "+tab));
+        if(VarPrefix!=null)
+            buffer.append(VarPrefix.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

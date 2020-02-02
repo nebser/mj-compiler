@@ -5,20 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Minus extends Addop {
+public class ErrorPrefix extends VarPrefix {
 
-    private String M1;
-
-    public Minus (String M1) {
-        this.M1=M1;
-    }
-
-    public String getM1() {
-        return M1;
-    }
-
-    public void setM1(String M1) {
-        this.M1=M1;
+    public ErrorPrefix () {
     }
 
     public void accept(Visitor visitor) {
@@ -39,13 +28,10 @@ public class Minus extends Addop {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Minus(\n");
-
-        buffer.append(" "+tab+M1);
-        buffer.append("\n");
+        buffer.append("ErrorPrefix(\n");
 
         buffer.append(tab);
-        buffer.append(") [Minus]");
+        buffer.append(") [ErrorPrefix]");
         return buffer.toString();
     }
 }

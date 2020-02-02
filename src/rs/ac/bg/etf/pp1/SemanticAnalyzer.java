@@ -58,6 +58,7 @@ import rs.ac.bg.etf.pp1.ast.PrintWithNumber;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.ProgramName;
 import rs.ac.bg.etf.pp1.ast.Read;
+import rs.ac.bg.etf.pp1.ast.RegularPrefix;
 import rs.ac.bg.etf.pp1.ast.RegularVarDecl;
 import rs.ac.bg.etf.pp1.ast.RetExpr;
 import rs.ac.bg.etf.pp1.ast.Return;
@@ -291,8 +292,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	@Override
 	public void visit(Variables variables) {
 		variables.varlist = new VarList();
-		variables.varlist.add(variables.getVar().var);
+		variables.varlist.add(variables.getVarPrefix().var);
 		variables.varlist.add(variables.getVarList().varlist);
+	}
+
+	@Override
+	public void visit(RegularPrefix regularPrefix) {
+		regularPrefix.var = regularPrefix.getVar().var;
 	}
 
 	@Override

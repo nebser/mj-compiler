@@ -5,21 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SingleCondTerm extends Condition {
+public class RegularPrefix extends VarPrefix {
 
-    private CondTerm CondTerm;
+    private Var Var;
 
-    public SingleCondTerm (CondTerm CondTerm) {
-        this.CondTerm=CondTerm;
-        if(CondTerm!=null) CondTerm.setParent(this);
+    public RegularPrefix (Var Var) {
+        this.Var=Var;
+        if(Var!=null) Var.setParent(this);
     }
 
-    public CondTerm getCondTerm() {
-        return CondTerm;
+    public Var getVar() {
+        return Var;
     }
 
-    public void setCondTerm(CondTerm CondTerm) {
-        this.CondTerm=CondTerm;
+    public void setVar(Var Var) {
+        this.Var=Var;
     }
 
     public void accept(Visitor visitor) {
@@ -27,32 +27,32 @@ public class SingleCondTerm extends Condition {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(CondTerm!=null) CondTerm.accept(visitor);
+        if(Var!=null) Var.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(CondTerm!=null) CondTerm.traverseTopDown(visitor);
+        if(Var!=null) Var.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(CondTerm!=null) CondTerm.traverseBottomUp(visitor);
+        if(Var!=null) Var.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SingleCondTerm(\n");
+        buffer.append("RegularPrefix(\n");
 
-        if(CondTerm!=null)
-            buffer.append(CondTerm.toString("  "+tab));
+        if(Var!=null)
+            buffer.append(Var.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [SingleCondTerm]");
+        buffer.append(") [RegularPrefix]");
         return buffer.toString();
     }
 }

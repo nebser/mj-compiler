@@ -1,0 +1,15 @@
+// Variable error
+
+program syntaxErrors
+
+{
+	void main()
+		Test t;
+		char 5;
+		int random, void, b;
+	{
+		b = if;
+		b = else;
+		print(b);
+	}
+}

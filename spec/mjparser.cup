@@ -68,7 +68,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, GlobalVarDecl;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
-nonterminal rs.ac.bg.etf.pp1.util.Var Var;
+nonterminal rs.ac.bg.etf.pp1.util.Var Var, VarPrefix;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
 nonterminal Addop, Mulop;
 
@@ -115,16 +115,22 @@ VarDecl ::= (RegularVarDecl) Type VarList SEMI_COLON
 			{: parser.report_error("Iregularna definicija promenljive u liniji " + lleft, null); :}
 			;
 
-VarList ::= (Variables) Var COMMA VarList
+VarList ::= (Variables) VarPrefix VarList
 			|
 			(Variable) Var
 			;
 			
+VarPrefix ::= (RegularPrefix) Var COMMA
+			  |
+			  (ErrorPrefix) error COMMA:l
+			{: parser.report_error("Iregularna definicija promenljive u liniji " + lleft, null); :}
+			;
+			
 Var ::= (PrimitiveVar) IDENT:ident
-		|
-		(ArrayVar) IDENT:ident LBRACKET RBRACKET
-		;
-
+			|
+			(ArrayVar) IDENT:ident LBRACKET RBRACKET
+			;
+			
 MethodDeclSection ::= (MethodDeclarationSection) LBRACE MethodDeclList RBRACE
 					|
 					(NoMethodDeclarationSection) /* epsilon */

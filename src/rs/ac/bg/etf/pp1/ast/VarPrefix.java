@@ -5,13 +5,13 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ConstList implements SyntaxNode {
+public abstract class VarPrefix implements SyntaxNode {
 
     private SyntaxNode parent;
 
     private int line;
 
-    public rs.ac.bg.etf.pp1.util.ObjList objlist = null;
+    public rs.ac.bg.etf.pp1.util.Var var = null;
 
     public SyntaxNode getParent() {
         return parent;
