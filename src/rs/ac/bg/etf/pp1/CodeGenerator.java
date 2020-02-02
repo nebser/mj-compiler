@@ -12,10 +12,10 @@ import rs.ac.bg.etf.pp1.ast.DecrementDesignator;
 import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
 import rs.ac.bg.etf.pp1.ast.FactorTerm;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
-import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
-import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
 import rs.ac.bg.etf.pp1.ast.GlobalVariableDeclarations;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
+import rs.ac.bg.etf.pp1.ast.MethodDecl;
+import rs.ac.bg.etf.pp1.ast.MethodHeader;
 import rs.ac.bg.etf.pp1.ast.MulTerm;
 import rs.ac.bg.etf.pp1.ast.Mulop;
 import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
@@ -262,20 +262,20 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(GlobalMethodHeader globalMethodHeader) {
-		globalMethodHeader.obj.setAdr(Code.pc);
-		if (globalMethodHeader.obj.getName().equals("main")) {
+	public void visit(MethodHeader methodHeader) {
+		methodHeader.obj.setAdr(Code.pc);
+		if (methodHeader.obj.getName().equals("main")) {
 			Code.mainPc = Code.pc;
 		}
-		Collection<Obj> locals = globalMethodHeader.obj.getLocalSymbols();
+		Collection<Obj> locals = methodHeader.obj.getLocalSymbols();
 
 		Code.put(Code.enter);
-		Code.put(globalMethodHeader.obj.getLevel());
+		Code.put(methodHeader.obj.getLevel());
 		Code.put(locals.size());
 	}
 
 	@Override
-	public void visit(GlobalMethodDecl globalMethodDecl) {
+	public void visit(MethodDecl methodDecl) {
 		// check if return is not the last
 		if (Code.buf[Code.pc - 1] != (byte) Code.return_) {
 			Code.put(Code.exit);

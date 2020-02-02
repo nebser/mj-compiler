@@ -60,10 +60,9 @@ nonterminal Condition, Matched, Unmatched, OptionalDesignatorStatement, ForState
 nonterminal Assignop, ActPars, ExprList, Relop;
 nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
-nonterminal FieldDeclSection, FieldDeclList, FieldDecl;
-nonterminal GlobalMethodDeclList, GlobalMethodDecl, DeclElem;
+nonterminal DeclElem;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader, GlobalMethodHeader;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
@@ -72,7 +71,7 @@ nonterminal rs.ac.bg.etf.pp1.util.Var Var, VarPrefix;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
 nonterminal Addop, Mulop;
 
-Program ::= (Program) PROGRAM ProgramName:p DeclSection LBRACE GlobalMethodDeclList RBRACE;
+Program ::= (Program) PROGRAM ProgramName:p DeclSection LBRACE MethodDeclList RBRACE;
 
 ProgramName ::= (ProgramName) IDENT:progName;
 
@@ -139,16 +138,7 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 					(MethodDeclaration) MethodDecl
 					;
 					
-GlobalMethodDeclList ::= (GlobalMethodDeclarations) GlobalMethodDeclList GlobalMethodDecl
-						 |
-						 (GlobalMethodDeclaration) GlobalMethodDecl
-						 ;
-						 
-GlobalMethodDecl ::= (GlobalMethodDecl) GlobalMethodHeader VarDeclSection LBRACE StatementSection RBRACE;
-
-GlobalMethodHeader ::= (GlobalMethodHeader) ReturnType IDENT:ident LPARENTHESIS FormPars RPARENTHESIS;
-					
-ClassDecl ::= (ClassDecl) CLASS ClassName ExtendsStmt LBRACE FieldDeclSection MethodDeclSection RBRACE;
+ClassDecl ::= (ClassDecl) CLASS ClassName ExtendsStmt LBRACE VarDeclSection MethodDeclSection RBRACE;
 
 ClassName ::= (ClassName) IDENT:ident;
 
@@ -156,18 +146,6 @@ ExtendsStmt ::= (ExtendsStatement) EXTENDS IDENT
 					| 
 					(NoExtendsStatement) /* epsilon */
 					;
-					
-FieldDeclSection ::= (FieldDeclarationSection) FieldDeclList
-					|
-					(NoFieldDeclarationSection) /* epsilon */
-					;
-					
-FieldDeclList ::= (FieldDeclarations) FieldDeclList FieldDecl
-				  |
-				  (FieldDeclaration) FieldDecl
-				  ;
-				  
-FieldDecl ::= (FieldDecl) Type VarList SEMI_COLON;
 
 VarDeclSection ::= (VariableDeclarationSection) VarDeclList
 					|
@@ -179,7 +157,7 @@ VarDeclList ::= (VariablesDeclarations) VarDeclList VarDecl
 				(VariablesDeclarationsElem) VarDecl
 				;
 				
-AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS ClassName ExtendsStmt LBRACE FieldDeclSection AnyMethodDeclSection RBRACE;
+AbstractClassDecl ::= (AbstractClassDecl) ABSTRACT CLASS ClassName ExtendsStmt LBRACE VarDeclSection AnyMethodDeclSection RBRACE;
 
 AnyMethodDeclSection ::= (AnyMethodDeclarationSection) LBRACE AnyMethodDeclList RBRACE
 						|

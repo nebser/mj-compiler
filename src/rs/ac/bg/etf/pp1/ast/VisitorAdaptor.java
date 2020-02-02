@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 4:2:13
+// 2/1/2020 4:22:53
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -17,7 +17,6 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(AnyMethodDeclSection AnyMethodDeclSection) { }
     public void visit(Relop Relop) { }
     public void visit(Assignop Assignop) { }
-    public void visit(FieldDeclList FieldDeclList) { }
     public void visit(Var Var) { }
     public void visit(ConstDefinition ConstDefinition) { }
     public void visit(StatementList StatementList) { }
@@ -26,7 +25,6 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Factor Factor) { }
     public void visit(VarList VarList) { }
     public void visit(CondTerm CondTerm) { }
-    public void visit(FieldDeclSection FieldDeclSection) { }
     public void visit(AbstractMethodDecl AbstractMethodDecl) { }
     public void visit(ConstList ConstList) { }
     public void visit(DeclList DeclList) { }
@@ -34,7 +32,6 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Term Term) { }
     public void visit(FormParsList FormParsList) { }
     public void visit(Condition Condition) { }
-    public void visit(GlobalMethodDeclList GlobalMethodDeclList) { }
     public void visit(DeclSection DeclSection) { }
     public void visit(ExprList ExprList) { }
     public void visit(ExtendsStmt ExtendsStmt) { }
@@ -47,8 +44,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(AnyMethodDecl AnyMethodDecl) { }
     public void visit(VarDeclSection VarDeclSection) { }
     public void visit(OptionalDesignatorStatement OptionalDesignatorStatement) { }
-    public void visit(DeclElem DeclElem) { }
     public void visit(Statement Statement) { }
+    public void visit(DeclElem DeclElem) { }
     public void visit(ReturnExpr ReturnExpr) { }
     public void visit(VarDecl VarDecl) { }
     public void visit(AnyMethodDeclList AnyMethodDeclList) { }
@@ -148,19 +145,10 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(VariablesDeclarations VariablesDeclarations) { visit(); }
     public void visit(NoVariableDeclarationSection NoVariableDeclarationSection) { visit(); }
     public void visit(VariableDeclarationSection VariableDeclarationSection) { visit(); }
-    public void visit(FieldDecl FieldDecl) { visit(); }
-    public void visit(FieldDeclaration FieldDeclaration) { visit(); }
-    public void visit(FieldDeclarations FieldDeclarations) { visit(); }
-    public void visit(NoFieldDeclarationSection NoFieldDeclarationSection) { visit(); }
-    public void visit(FieldDeclarationSection FieldDeclarationSection) { visit(); }
     public void visit(NoExtendsStatement NoExtendsStatement) { visit(); }
     public void visit(ExtendsStatement ExtendsStatement) { visit(); }
     public void visit(ClassName ClassName) { visit(); }
     public void visit(ClassDecl ClassDecl) { visit(); }
-    public void visit(GlobalMethodHeader GlobalMethodHeader) { visit(); }
-    public void visit(GlobalMethodDecl GlobalMethodDecl) { visit(); }
-    public void visit(GlobalMethodDeclaration GlobalMethodDeclaration) { visit(); }
-    public void visit(GlobalMethodDeclarations GlobalMethodDeclarations) { visit(); }
     public void visit(MethodDeclaration MethodDeclaration) { visit(); }
     public void visit(MethodDeclarations MethodDeclarations) { visit(); }
     public void visit(NoMethodDeclarationSection NoMethodDeclarationSection) { visit(); }

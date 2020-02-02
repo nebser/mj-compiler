@@ -9,8 +9,6 @@ import rs.ac.bg.etf.pp1.ast.Constant;
 import rs.ac.bg.etf.pp1.ast.DesignatorWithActParsFactor;
 import rs.ac.bg.etf.pp1.ast.ForStmt;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
-import rs.ac.bg.etf.pp1.ast.GlobalMethodDecl;
-import rs.ac.bg.etf.pp1.ast.GlobalMethodHeader;
 import rs.ac.bg.etf.pp1.ast.MathedStmt;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
@@ -110,19 +108,6 @@ public class Counter extends VisitorAdaptor {
 
 	@Override
 	public void visit(MethodDecl methodDecl) {
-		varDeclMode = VarDeclMode.GLOBAL;
-	}
-
-	@Override
-	public void visit(GlobalMethodHeader globalMethodHeader) {
-		varDeclMode = VarDeclMode.LOCAL;
-		methodDeclarations++;
-		currentMethod = new MethodContext(globalMethodHeader.getIdent());
-		methods.add(currentMethod);
-	}
-
-	@Override
-	public void visit(GlobalMethodDecl globalMethodDecl) {
 		varDeclMode = VarDeclMode.GLOBAL;
 	}
 
