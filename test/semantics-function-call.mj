@@ -30,11 +30,10 @@ program invalidExpressions
 		int result;
 	{
 		test = 20;
-		result = incrementAndPrint(20, 40, 60);
-		result = incrementAndPrint();
+		incrementAndPrint(20, 40, 60);
 		print(test);
 		print(eol);
-		print(result);	
+		//print(result);	
 	}
 
 }

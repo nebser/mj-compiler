@@ -1,7 +1,6 @@
 package rs.ac.bg.etf.pp1;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
@@ -390,13 +389,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 		parameterList.objlist = new ObjList();
+		parameterList.objlist.add(parameterList.getFormParsElem().objlist);
 		if (parameterList.getVar().var.isArray()) {
 			parameterList.objlist.add(new Obj(Obj.Var, parameterList.getVar().var.getName(),
 					new Struct(Struct.Array, typeObj.getType())));
 		} else {
 			parameterList.objlist.add(new Obj(Obj.Var, parameterList.getVar().var.getName(), typeObj.getType()));
 		}
-		parameterList.objlist.add(parameterList.getFormParsElem().objlist);
 	}
 
 	@Override
@@ -459,7 +458,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		Tab.openScope();
 
 		ArrayList<Obj> formParsList = formPars.getObjs();
-		Collections.reverse(formParsList);
+//		Collections.reverse(formParsList);
 		formParsList.forEach(p -> {
 			Tab.insert(Obj.Var, p.getName(), p.getType());
 		});
@@ -589,12 +588,25 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 					+ " ne predstavlja funkciju pa se ne moze koristiti u izrazu za poziv funkcije", d);
 			return;
 		}
-		int numOfActualPars = designatorWithActParsFactor.getActPars().objlist.size();
+
+		ObjList actPars = designatorWithActParsFactor.getActPars().objlist;
+		int numOfActualPars = actPars.size();
 		int numOfFormalPars = d.obj.getLevel();
 		if (numOfActualPars != numOfFormalPars) {
 			reportError("Funkcija " + d.obj.getName() + " prima " + numOfFormalPars
 					+ (numOfFormalPars == 1 ? " parametar" : " parametra") + " a prosledjeno joj je " + numOfActualPars,
 					d);
+		} else {
+			int actParElem = 0;
+			Obj[] localSymbols = d.obj.getLocalSymbols().toArray(new Obj[1]);
+			for (Obj par : actPars.getObjs()) {
+				if (!par.getType().equals(localSymbols[actParElem].getType())) {
+					reportError("Tipovi " + (actParElem + 1)
+							+ ". formalnog i stvarnog argumenta se ne poklapaju kod poziva funkcije " + d.obj.getName(),
+							d);
+				}
+				actParElem++;
+			}
 		}
 		reportSymbol("poziv globalne funkcije", d.obj, d);
 		designatorWithActParsFactor.obj = d.obj;
@@ -726,13 +738,26 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 					+ " ne predstavlja funkciju pa se ne moze koristiti u izrazu za poziv funkcije", d);
 			return;
 		}
-		int numOfActualPars = functionCall.getActPars().objlist.size();
+		ObjList actPars = functionCall.getActPars().objlist;
+		int numOfActualPars = actPars.size();
 		int numOfFormalPars = d.obj.getLevel();
 		if (numOfActualPars != numOfFormalPars) {
 			reportError("Funkcija " + d.obj.getName() + " prima " + numOfFormalPars
 					+ (numOfFormalPars == 1 ? " parametar" : " parametra") + " a prosledjeno joj je " + numOfActualPars,
 					d);
+		} else {
+			int actParElem = 0;
+			Obj[] localSymbols = d.obj.getLocalSymbols().toArray(new Obj[1]);
+			for (Obj par : actPars.getObjs()) {
+				if (!par.getType().equals(localSymbols[actParElem].getType())) {
+					reportError("Tipovi " + (actParElem + 1)
+							+ ". formalnog i stvarnog argumenta se ne poklapaju kod poziva funkcije " + d.obj.getName(),
+							d);
+				}
+				actParElem++;
+			}
 		}
+
 		reportSymbol("poziv globalne funkcije", d.obj, d);
 		functionCall.obj = d.obj;
 	}

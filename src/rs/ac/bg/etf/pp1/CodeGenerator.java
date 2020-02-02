@@ -255,10 +255,15 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(FunctionCall functionCall) {
-		int addr = functionCall.getDesignator().obj.getAdr() - Code.pc;
+		Obj desObj = functionCall.getDesignator().obj;
+		int addr = desObj.getAdr() - Code.pc;
 
 		Code.put(Code.call);
 		Code.put2(addr);
+
+		if (!desObj.getType().equals(Tab.noType)) {
+			Code.put(Code.pop);
+		}
 	}
 
 	@Override

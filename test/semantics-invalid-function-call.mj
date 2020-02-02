@@ -1,0 +1,26 @@
+// Semantics error
+
+program invalidFunctionCall
+
+{
+	void printAll(int a, bool b, char c) {
+		print(a);
+		print(eol);
+		
+		print(b);
+		print(eol);
+		
+		print(c);
+		print(eol);
+	}
+	
+	void main() 
+	{
+		printAll(1, false, 'a');
+		printAll(true, false, 'a');
+		printAll(1, 2, 'a');
+		printAll(1, false, 7);
+		
+	}
+
+}
