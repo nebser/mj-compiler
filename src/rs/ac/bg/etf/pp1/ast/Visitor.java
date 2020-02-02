@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 5:14:46
+// 2/1/2020 15:7:35
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -34,8 +34,8 @@ public interface Visitor {
     public void visit(Term Term);
     public void visit(FormParsList FormParsList);
     public void visit(Condition Condition);
-    public void visit(DeclSection DeclSection);
     public void visit(ExprList ExprList);
+    public void visit(DeclSection DeclSection);
     public void visit(ExtendsStmt ExtendsStmt);
     public void visit(VarDeclList VarDeclList);
     public void visit(Expr Expr);
@@ -122,6 +122,7 @@ public interface Visitor {
     public void visit(StmtList StmtList);
     public void visit(MatchedIf MatchedIf);
     public void visit(DesignatorStmt DesignatorStmt);
+    public void visit(For For);
     public void visit(ForStmt ForStmt);
     public void visit(UnmatchedStmt UnmatchedStmt);
     public void visit(MathedStmt MathedStmt);

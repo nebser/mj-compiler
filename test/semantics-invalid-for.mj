@@ -1,0 +1,34 @@
+// Semantics error
+
+program invalidFor
+
+{
+	void printArray(int a[], int n) 
+		int i, j;
+	{
+		for (i = 0; i < n; i++) {
+			print(a[i]);
+			
+			for (j = 0; j < 10; j++) {
+				continue;
+			}
+			
+			break;
+		}
+		
+		break;
+		continue;
+		
+		return a;
+	}
+	
+	void main() 
+		int a[];
+	{
+		a = new int[2];
+		a[0] = 5;
+		a[1] = 6;
+		printArray(a, 2);
+	}
+
+}

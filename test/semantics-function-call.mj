@@ -1,0 +1,40 @@
+// Semantics error
+
+program invalidExpressions
+
+{
+	int incrementAndPrint(int a, int b, int c) {
+		print(a);
+		print(eol);
+		a++;
+		print(a);
+		print(eol);
+		
+		print(b);
+		print(eol);
+		b++;
+		print(b);
+		print(eol);
+		
+		print(c);
+		print(eol);
+		c++;
+		print(c);
+		print(eol);
+		
+		return a;
+	}
+	
+	void main() 
+		int test;
+		int result;
+	{
+		test = 20;
+		result = incrementAndPrint(20, 40, 60);
+		result = incrementAndPrint();
+		print(test);
+		print(eol);
+		print(result);	
+	}
+
+}

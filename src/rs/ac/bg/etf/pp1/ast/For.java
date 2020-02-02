@@ -5,9 +5,27 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Break extends Matched {
+public class For implements SyntaxNode {
 
-    public Break () {
+    private SyntaxNode parent;
+    private int line;
+    public For () {
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +46,10 @@ public class Break extends Matched {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Break(\n");
+        buffer.append("For(\n");
 
         buffer.append(tab);
-        buffer.append(") [Break]");
+        buffer.append(") [For]");
         return buffer.toString();
     }
 }

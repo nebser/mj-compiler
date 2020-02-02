@@ -57,14 +57,15 @@ nonterminal VarDeclSection, VarDeclList;
 nonterminal StatementList, Statement, StatementSection, AnyMethodDeclSection, AnyMethodDeclList, AnyMethodDecl;
 nonterminal AbstractMethodDecl, MethodDeclList, ExtendsStmt;
 nonterminal Condition, Matched, Unmatched, OptionalDesignatorStatement, ForStatement;
-nonterminal Assignop, ActPars, ExprList, Relop;
+nonterminal Assignop, Relop;
 nonterminal CondTerm, CondFact;
 nonterminal DesignatorSentence;
-nonterminal DeclElem, LoopCondition;
+nonterminal DeclElem, LoopCondition, For;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName, Program, ConstDefinition, MethodHeader;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, FormParsSection, FormParsElem;
+nonterminal rs.ac.bg.etf.pp1.util.ObjList ExprList, ActPars;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var, VarPrefix;
@@ -225,8 +226,10 @@ Statement ::= (MathedStmt) Matched
 				|
 			  (UnmatchedStmt) Unmatched
 			  |
-			  (ForStmt) FOR LPARENTHESIS OptionalDesignatorStatement SEMI_COLON LoopCondition OptionalDesignatorStatement RPARENTHESIS Statement
+			  (ForStmt) For LPARENTHESIS OptionalDesignatorStatement SEMI_COLON LoopCondition OptionalDesignatorStatement RPARENTHESIS Statement
 			  ;
+			  
+For ::= (For) FOR;
 			  
 Matched ::= (DesignatorStmt) DesignatorSentence
 			|

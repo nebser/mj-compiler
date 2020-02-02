@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 5:14:46
+// 2/1/2020 15:7:35
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -10,6 +10,8 @@ public abstract class ActPars implements SyntaxNode {
     private SyntaxNode parent;
 
     private int line;
+
+    public rs.ac.bg.etf.pp1.util.ObjList objlist = null;
 
     public SyntaxNode getParent() {
         return parent;

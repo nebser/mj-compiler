@@ -1,8 +1,12 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.AbstractClassDecl;
+import rs.ac.bg.etf.pp1.ast.ActualPars;
 import rs.ac.bg.etf.pp1.ast.AddExpr;
 import rs.ac.bg.etf.pp1.ast.AddExpression;
 import rs.ac.bg.etf.pp1.ast.Addop;
@@ -11,6 +15,7 @@ import rs.ac.bg.etf.pp1.ast.ArrayVar;
 import rs.ac.bg.etf.pp1.ast.AssignDesignator;
 import rs.ac.bg.etf.pp1.ast.BoolConstant;
 import rs.ac.bg.etf.pp1.ast.BoolFactor;
+import rs.ac.bg.etf.pp1.ast.Break;
 import rs.ac.bg.etf.pp1.ast.CharacterConstant;
 import rs.ac.bg.etf.pp1.ast.CharacterFactor;
 import rs.ac.bg.etf.pp1.ast.ClassDecl;
@@ -18,6 +23,7 @@ import rs.ac.bg.etf.pp1.ast.ClassName;
 import rs.ac.bg.etf.pp1.ast.Constant;
 import rs.ac.bg.etf.pp1.ast.ConstantDeclarations;
 import rs.ac.bg.etf.pp1.ast.Constants;
+import rs.ac.bg.etf.pp1.ast.Continue;
 import rs.ac.bg.etf.pp1.ast.DecrementDesignator;
 import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorFactor;
@@ -26,9 +32,13 @@ import rs.ac.bg.etf.pp1.ast.DivideEquals;
 import rs.ac.bg.etf.pp1.ast.ErrorFormPars;
 import rs.ac.bg.etf.pp1.ast.ErrorFormParsElem;
 import rs.ac.bg.etf.pp1.ast.Expr;
+import rs.ac.bg.etf.pp1.ast.Expression;
 import rs.ac.bg.etf.pp1.ast.ExpressionFactor;
+import rs.ac.bg.etf.pp1.ast.ExpressionList;
 import rs.ac.bg.etf.pp1.ast.Factor;
 import rs.ac.bg.etf.pp1.ast.FactorTerm;
+import rs.ac.bg.etf.pp1.ast.For;
+import rs.ac.bg.etf.pp1.ast.ForStmt;
 import rs.ac.bg.etf.pp1.ast.FormalParameters;
 import rs.ac.bg.etf.pp1.ast.FunctionCall;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
@@ -41,6 +51,7 @@ import rs.ac.bg.etf.pp1.ast.Mulop;
 import rs.ac.bg.etf.pp1.ast.MultiplyEquals;
 import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
 import rs.ac.bg.etf.pp1.ast.NewObjectFactor;
+import rs.ac.bg.etf.pp1.ast.NoActualPars;
 import rs.ac.bg.etf.pp1.ast.NoFormalParameters;
 import rs.ac.bg.etf.pp1.ast.NoMinusExpression;
 import rs.ac.bg.etf.pp1.ast.NoReturnExpr;
@@ -86,6 +97,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	private boolean errorDetected = false;
 	private boolean mainDetected = false;
 	private Obj currentMethod = Tab.noObj;
+	private int forCnt = 0;
 
 	Logger log = Logger.getLogger(getClass());
 
@@ -100,10 +112,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	public void reportInfo(String message, SyntaxNode info) {
-		StringBuilder msg = new StringBuilder(message);
+		StringBuilder msg = new StringBuilder("Pretraga");
 		int line = (info == null) ? 0 : info.getLine();
 		if (line != 0)
 			msg.append(" na liniji ").append(line);
+		msg.append(": ").append(message).append('\n');
 		log.info(msg.toString());
 
 	}
@@ -225,6 +238,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		case Obj.Var:
 			if (obj.getLevel() == 0) {
 				reportSymbol("globalna promenljiva", obj, simpleDesignator);
+			} else if (obj.getAdr() < currentMethod.getLevel()) {
+				reportSymbol("koriscenje formalnog parametra funkcije " + currentMethod.getName(), obj,
+						simpleDesignator);
 			}
 			break;
 		default:
@@ -441,7 +457,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		methodHeader.obj = Tab.insert(Obj.Meth, methodName, methodHeader.getReturnType().struct, 0, formPars.size());
 		currentMethod = methodHeader.obj;
 		Tab.openScope();
-		formPars.getObjs().forEach(p -> {
+
+		ArrayList<Obj> formParsList = formPars.getObjs();
+		Collections.reverse(formParsList);
+		formParsList.forEach(p -> {
 			Tab.insert(Obj.Var, p.getName(), p.getType());
 		});
 	}
@@ -560,14 +579,25 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	@Override
 	public void visit(DesignatorWithActParsFactor designatorWithActParsFactor) {
-		Obj o = designatorWithActParsFactor.getDesignator().obj;
-		if (o.getKind() != Obj.Meth) {
-			reportError("Simbol " + o.getName() + " ne predstavlja metodu klase ili funkciju",
-					designatorWithActParsFactor.getDesignator());
-			designatorWithActParsFactor.obj = Tab.noObj;
+		Designator d = designatorWithActParsFactor.getDesignator();
+		designatorWithActParsFactor.obj = Tab.noObj;
+		if (d.obj.equals(Tab.noObj)) {
 			return;
 		}
-		designatorWithActParsFactor.obj = o;
+		if (d.obj.getKind() != Obj.Meth) {
+			reportError("Simbol " + d.obj.getName()
+					+ " ne predstavlja funkciju pa se ne moze koristiti u izrazu za poziv funkcije", d);
+			return;
+		}
+		int numOfActualPars = designatorWithActParsFactor.getActPars().objlist.size();
+		int numOfFormalPars = d.obj.getLevel();
+		if (numOfActualPars != numOfFormalPars) {
+			reportError("Funkcija " + d.obj.getName() + " prima " + numOfFormalPars
+					+ (numOfFormalPars == 1 ? " parametar" : " parametra") + " a prosledjeno joj je " + numOfActualPars,
+					d);
+		}
+		reportSymbol("poziv globalne funkcije", d.obj, d);
+		designatorWithActParsFactor.obj = d.obj;
 	}
 
 	@Override
@@ -696,7 +726,38 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 					+ " ne predstavlja funkciju pa se ne moze koristiti u izrazu za poziv funkcije", d);
 			return;
 		}
+		int numOfActualPars = functionCall.getActPars().objlist.size();
+		int numOfFormalPars = d.obj.getLevel();
+		if (numOfActualPars != numOfFormalPars) {
+			reportError("Funkcija " + d.obj.getName() + " prima " + numOfFormalPars
+					+ (numOfFormalPars == 1 ? " parametar" : " parametra") + " a prosledjeno joj je " + numOfActualPars,
+					d);
+		}
+		reportSymbol("poziv globalne funkcije", d.obj, d);
 		functionCall.obj = d.obj;
+	}
+
+	@Override
+	public void visit(Expression expression) {
+		expression.objlist = new ObjList();
+		expression.objlist.add(expression.getExpr().obj);
+	}
+
+	@Override
+	public void visit(ExpressionList expressionList) {
+		expressionList.objlist = new ObjList();
+		expressionList.objlist.add(expressionList.getExprList().objlist);
+		expressionList.objlist.add(expressionList.getExpr().obj);
+	}
+
+	@Override
+	public void visit(ActualPars actualPars) {
+		actualPars.objlist = actualPars.getExprList().objlist;
+	}
+
+	@Override
+	public void visit(NoActualPars noActualPars) {
+		noActualPars.objlist = new ObjList();
 	}
 
 	@Override
@@ -737,6 +798,31 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 		incrementDesignator.obj = d.obj;
+	}
+
+	@Override
+	public void visit(For for_) {
+		forCnt++;
+		reportInfo("Upotreba for petlje", for_.getParent());
+	}
+
+	@Override
+	public void visit(ForStmt forStatement) {
+		forCnt--;
+	}
+
+	@Override
+	public void visit(Break break_) {
+		if (forCnt <= 0) {
+			reportError("Naredba break upotrebljena van for petlje", break_.getParent());
+		}
+	}
+
+	@Override
+	public void visit(Continue continue_) {
+		if (forCnt <= 0) {
+			reportError("Naredba continue upotrebljena van for petlje", continue_.getParent());
+		}
 	}
 
 	public boolean isMainDetected() {
