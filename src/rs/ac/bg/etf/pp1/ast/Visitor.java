@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 15:7:35
+// 2/1/2020 16:15:51
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -125,7 +125,7 @@ public interface Visitor {
     public void visit(For For);
     public void visit(ForStmt ForStmt);
     public void visit(UnmatchedStmt UnmatchedStmt);
-    public void visit(MathedStmt MathedStmt);
+    public void visit(MatchedStmt MatchedStmt);
     public void visit(ErrorCondition ErrorCondition);
     public void visit(RegularCondition RegularCondition);
     public void visit(SingleStatement SingleStatement);

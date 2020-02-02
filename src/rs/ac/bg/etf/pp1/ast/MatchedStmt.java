@@ -1,15 +1,15 @@
 // generated with ast extension for cup
 // version 0.8
-// 2/1/2020 15:7:35
+// 2/1/2020 16:15:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class MathedStmt extends Statement {
+public class MatchedStmt extends Statement {
 
     private Matched Matched;
 
-    public MathedStmt (Matched Matched) {
+    public MatchedStmt (Matched Matched) {
         this.Matched=Matched;
         if(Matched!=null) Matched.setParent(this);
     }
@@ -43,7 +43,7 @@ public class MathedStmt extends Statement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("MathedStmt(\n");
+        buffer.append("MatchedStmt(\n");
 
         if(Matched!=null)
             buffer.append(Matched.toString("  "+tab));
@@ -52,7 +52,7 @@ public class MathedStmt extends Statement {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [MathedStmt]");
+        buffer.append(") [MatchedStmt]");
         return buffer.toString();
     }
 }

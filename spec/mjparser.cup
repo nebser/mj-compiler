@@ -222,7 +222,7 @@ LoopCondition ::= (RegularCondition) Condition SEMI_COLON
 				  {: parser.report_error("Iregularna sintaksa za izraz provere uslova za ostanak u petlji " + lleft, null); :}
 				  ;
 					
-Statement ::= (MathedStmt) Matched
+Statement ::= (MatchedStmt) Matched
 				|
 			  (UnmatchedStmt) Unmatched
 			  |
