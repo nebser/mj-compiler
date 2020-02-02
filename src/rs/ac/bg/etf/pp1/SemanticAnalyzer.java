@@ -600,7 +600,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			int actParElem = 0;
 			Obj[] localSymbols = d.obj.getLocalSymbols().toArray(new Obj[1]);
 			for (Obj par : actPars.getObjs()) {
-				if (!par.getType().equals(localSymbols[actParElem].getType())) {
+				if (!par.getType().assignableTo(localSymbols[actParElem].getType())) {
 					reportError("Tipovi " + (actParElem + 1)
 							+ ". formalnog i stvarnog argumenta se ne poklapaju kod poziva funkcije " + d.obj.getName(),
 							d);
@@ -749,7 +749,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			int actParElem = 0;
 			Obj[] localSymbols = d.obj.getLocalSymbols().toArray(new Obj[1]);
 			for (Obj par : actPars.getObjs()) {
-				if (!par.getType().equals(localSymbols[actParElem].getType())) {
+				if (!par.getType().assignableTo(localSymbols[actParElem].getType())) {
 					reportError("Tipovi " + (actParElem + 1)
 							+ ". formalnog i stvarnog argumenta se ne poklapaju kod poziva funkcije " + d.obj.getName(),
 							d);

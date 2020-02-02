@@ -27,13 +27,18 @@ program invalidExpressions
 	
 	void main() 
 		int test;
-		int result;
+		int testArray[];
 	{
 		test = 20;
 		incrementAndPrint(20, 40, 60);
+		testArray = new int[5];
+		print(len(testArray));
+		print(eol);
 		print(test);
 		print(eol);
-		//print(result);	
+		print(ord('A'));
+		print(eol);
+		print(chr(1));
 	}
 
 }

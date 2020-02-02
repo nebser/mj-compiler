@@ -37,6 +37,45 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	Logger log = Logger.getLogger(getClass());
 
+	public CodeGenerator() {
+		generateBuiltInFunctions();
+	}
+
+	public void generateBuiltInFunctions() {
+		Obj chrObj = Tab.find("chr");
+		chrObj.setAdr(Code.pc);
+
+		Code.put(Code.enter);
+		Code.put(1);
+		Code.put(1);
+		Code.put(Code.load_n);
+		Code.loadConst(48);
+		Code.put(Code.add);
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+
+		Obj ordObj = Tab.find("ord");
+		ordObj.setAdr(Code.pc);
+
+		Code.put(Code.enter);
+		Code.put(1);
+		Code.put(1);
+		Code.put(Code.load_n);
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+
+		Obj lenObj = Tab.find("len");
+		lenObj.setAdr(Code.pc);
+
+		Code.put(Code.enter);
+		Code.put(1);
+		Code.put(1);
+		Code.put(Code.load_n);
+		Code.put(Code.arraylength);
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
+
 	@Override
 	public void visit(GlobalVariableDeclarations globalVariableDeclarations) {
 		VarCounter cnt = new VarCounter();
