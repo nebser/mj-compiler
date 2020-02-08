@@ -67,7 +67,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator, DesignatorStatement;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ConstList, FormParsList, FormPars, FormParsSection, FormParsElem;
 nonterminal rs.ac.bg.etf.pp1.util.ObjList ExprList, ActPars;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ClassName, ReturnType, ReturnExpr;
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, AddExpr, Term;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor, Expr, FactorList, Term;
 nonterminal rs.ac.bg.etf.pp1.util.Var Var, VarPrefix;
 nonterminal rs.ac.bg.etf.pp1.util.VarList VarList;
 nonterminal Addop, Mulop;
@@ -304,13 +304,8 @@ CondFact ::= (ExprOp) Expr Relop Expr
 			|
 			(SingleExpr) Expr
 			;
-			
-Expr ::= (UnaryMinusExpression) MINUS AddExpr
-		 |
-		 (NoMinusExpression) AddExpr
-		 ;
 		 
-AddExpr ::= (AddExpression) AddExpr Addop Term
+Expr ::= (AddExpression) Expr Addop Term
 			|
 			(TermExpression) Term
 			;
@@ -327,6 +322,8 @@ Addop ::= (Minus) MINUS
 Term ::= (MulTerm) Term Mulop Factor
 		 |
 		 (FactorTerm) Factor
+		 |
+		 (MinusFactor) MINUS Factor
 		 ;
 		  
 Mulop ::= (Multiply) MULTIPLY

@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.AbstractClassDecl;
 import rs.ac.bg.etf.pp1.ast.ActualPars;
-import rs.ac.bg.etf.pp1.ast.AddExpr;
 import rs.ac.bg.etf.pp1.ast.AddExpression;
 import rs.ac.bg.etf.pp1.ast.Addop;
 import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
@@ -47,6 +46,7 @@ import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
 import rs.ac.bg.etf.pp1.ast.MinusEquals;
+import rs.ac.bg.etf.pp1.ast.MinusFactor;
 import rs.ac.bg.etf.pp1.ast.ModEquals;
 import rs.ac.bg.etf.pp1.ast.MulTerm;
 import rs.ac.bg.etf.pp1.ast.Mulop;
@@ -55,7 +55,6 @@ import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
 import rs.ac.bg.etf.pp1.ast.NewObjectFactor;
 import rs.ac.bg.etf.pp1.ast.NoActualPars;
 import rs.ac.bg.etf.pp1.ast.NoFormalParameters;
-import rs.ac.bg.etf.pp1.ast.NoMinusExpression;
 import rs.ac.bg.etf.pp1.ast.NoReturnExpr;
 import rs.ac.bg.etf.pp1.ast.NonVoidType;
 import rs.ac.bg.etf.pp1.ast.NumberConstant;
@@ -82,7 +81,6 @@ import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Term;
 import rs.ac.bg.etf.pp1.ast.TermExpression;
 import rs.ac.bg.etf.pp1.ast.Type;
-import rs.ac.bg.etf.pp1.ast.UnaryMinusExpression;
 import rs.ac.bg.etf.pp1.ast.ValidFormPars;
 import rs.ac.bg.etf.pp1.ast.Variable;
 import rs.ac.bg.etf.pp1.ast.Variables;
@@ -510,18 +508,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(UnaryMinusExpression unaryMinusExpression) {
-		unaryMinusExpression.obj = unaryMinusExpression.getAddExpr().obj;
-	}
-
-	@Override
-	public void visit(NoMinusExpression noMinusExpression) {
-		noMinusExpression.obj = noMinusExpression.getAddExpr().obj;
-	}
-
-	@Override
 	public void visit(AddExpression addExpression) {
-		AddExpr addExpr = addExpression.getAddExpr();
+		Expr addExpr = addExpression.getExpr();
 		if (!addExpr.obj.getType().equals(Tab.intType)) {
 			reportError("Tip izraza prilikom koriscenja ovog operatora biti int", addExpr);
 			addExpression.obj = Tab.noObj;
@@ -548,6 +536,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	@Override
 	public void visit(TermExpression termExpression) {
 		termExpression.obj = termExpression.getTerm().obj;
+	}
+
+	@Override
+	public void visit(MinusFactor minusFactor) {
+		minusFactor.obj = minusFactor.getFactor().obj;
 	}
 
 	@Override

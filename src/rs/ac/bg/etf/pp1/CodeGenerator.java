@@ -16,6 +16,7 @@ import rs.ac.bg.etf.pp1.ast.GlobalVariableDeclarations;
 import rs.ac.bg.etf.pp1.ast.IncrementDesignator;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodHeader;
+import rs.ac.bg.etf.pp1.ast.MinusFactor;
 import rs.ac.bg.etf.pp1.ast.MulTerm;
 import rs.ac.bg.etf.pp1.ast.Mulop;
 import rs.ac.bg.etf.pp1.ast.NewArrayFactor;
@@ -24,7 +25,6 @@ import rs.ac.bg.etf.pp1.ast.PrintWithNumber;
 import rs.ac.bg.etf.pp1.ast.Read;
 import rs.ac.bg.etf.pp1.ast.Return;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
-import rs.ac.bg.etf.pp1.ast.UnaryMinusExpression;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.ac.bg.etf.pp1.util.Tab;
 import rs.etf.pp1.mj.runtime.Code;
@@ -96,6 +96,15 @@ public class CodeGenerator extends VisitorAdaptor {
 		int kind = factorTerm.obj.getKind();
 		if (kind != Obj.NO_VALUE && kind != Obj.Meth) {
 			Code.load(factorTerm.obj);
+		}
+	}
+
+	@Override
+	public void visit(MinusFactor minusFactor) {
+		int kind = minusFactor.obj.getKind();
+		if (kind != Obj.NO_VALUE && kind != Obj.Meth) {
+			Code.load(minusFactor.obj);
+			Code.put(Code.neg);
 		}
 	}
 
@@ -277,11 +286,6 @@ public class CodeGenerator extends VisitorAdaptor {
 		} else {
 			Code.put(0);
 		}
-	}
-
-	@Override
-	public void visit(UnaryMinusExpression unaryMinusExpression) {
-		Code.put(Code.neg);
 	}
 
 	@Override

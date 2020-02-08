@@ -1,31 +1,31 @@
 // generated with ast extension for cup
 // version 0.8
-// 3/1/2020 0:3:46
+// 9/1/2020 0:28:42
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class AddExpression extends AddExpr {
+public class AddExpression extends Expr {
 
-    private AddExpr AddExpr;
+    private Expr Expr;
     private Addop Addop;
     private Term Term;
 
-    public AddExpression (AddExpr AddExpr, Addop Addop, Term Term) {
-        this.AddExpr=AddExpr;
-        if(AddExpr!=null) AddExpr.setParent(this);
+    public AddExpression (Expr Expr, Addop Addop, Term Term) {
+        this.Expr=Expr;
+        if(Expr!=null) Expr.setParent(this);
         this.Addop=Addop;
         if(Addop!=null) Addop.setParent(this);
         this.Term=Term;
         if(Term!=null) Term.setParent(this);
     }
 
-    public AddExpr getAddExpr() {
-        return AddExpr;
+    public Expr getExpr() {
+        return Expr;
     }
 
-    public void setAddExpr(AddExpr AddExpr) {
-        this.AddExpr=AddExpr;
+    public void setExpr(Expr Expr) {
+        this.Expr=Expr;
     }
 
     public Addop getAddop() {
@@ -49,20 +49,20 @@ public class AddExpression extends AddExpr {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(AddExpr!=null) AddExpr.accept(visitor);
+        if(Expr!=null) Expr.accept(visitor);
         if(Addop!=null) Addop.accept(visitor);
         if(Term!=null) Term.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(AddExpr!=null) AddExpr.traverseTopDown(visitor);
+        if(Expr!=null) Expr.traverseTopDown(visitor);
         if(Addop!=null) Addop.traverseTopDown(visitor);
         if(Term!=null) Term.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(AddExpr!=null) AddExpr.traverseBottomUp(visitor);
+        if(Expr!=null) Expr.traverseBottomUp(visitor);
         if(Addop!=null) Addop.traverseBottomUp(visitor);
         if(Term!=null) Term.traverseBottomUp(visitor);
         accept(visitor);
@@ -73,8 +73,8 @@ public class AddExpression extends AddExpr {
         buffer.append(tab);
         buffer.append("AddExpression(\n");
 
-        if(AddExpr!=null)
-            buffer.append(AddExpr.toString("  "+tab));
+        if(Expr!=null)
+            buffer.append(Expr.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
